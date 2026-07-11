@@ -11,21 +11,21 @@ Objetivos com peso igual:
 1. **Produto** — site rápido, bonito e encontrável (Google + IAs), pronto para receber links de afiliado reais depois.
 2. **Portfólio** — o repositório é vitrine no GitHub: arquitetura, legibilidade, componentização e testes contam tanto quanto as features.
 
-**Fora de escopo (por enquanto):** autenticação, banco conectado, links de afiliado reais, painel admin, pagamentos. Os *encaixes* ficam prontos (repositório, `buildAffiliateUrl`, `data/private/`), mas nada disso é implementado.
+**Fora de escopo (por enquanto):** autenticação, banco conectado, links de afiliado reais, painel admin, pagamentos. Os _encaixes_ ficam prontos (repositório, `buildAffiliateUrl`, `data/private/`), mas nada disso é implementado.
 
 ## 2. Decisões fechadas
 
-| Tema | Decisão | Racional |
-|---|---|---|
-| Stack | Next.js 16 (App Router, Turbopack) · React 19.2 · TypeScript strict · Tailwind v4 · Node 22 LTS | Brief §2 |
-| Gerenciador | npm, lockfile único | Brief §2 |
-| Lint/format | ESLint 9 (flat config) + Prettier, com `eslint-config-next` | Padrão consagrado do ecossistema; regras Next/a11y inclusas |
-| Testes | Vitest + Testing Library. **Sem Playwright** por ora | Decisão do usuário (2026-07-11) |
-| Dados | 100% mock atrás de camada de repositório; `DATA_SOURCE=mock` default | Brief §4 |
-| **Prisma** | **Pré-montado por último** (fase final): schema + client + stub de repositório, sem conexão | Decisão do usuário (2026-07-11) |
-| `.claude/` | **Commitado** (`settings.json` + `skills/`); só `settings.local.json` gitignorado | Decisão do usuário (2026-07-11) |
-| Deploy | Vercel, zero config extra | Brief §2 |
-| Idioma do conteúdo | pt-BR | Público brasileiro |
+| Tema               | Decisão                                                                                         | Racional                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Stack              | Next.js 16 (App Router, Turbopack) · React 19.2 · TypeScript strict · Tailwind v4 · Node 22 LTS | Brief §2                                                    |
+| Gerenciador        | npm, lockfile único                                                                             | Brief §2                                                    |
+| Lint/format        | ESLint 9 (flat config) + Prettier, com `eslint-config-next`                                     | Padrão consagrado do ecossistema; regras Next/a11y inclusas |
+| Testes             | Vitest + Testing Library. **Sem Playwright** por ora                                            | Decisão do usuário (2026-07-11)                             |
+| Dados              | 100% mock atrás de camada de repositório; `DATA_SOURCE=mock` default                            | Brief §4                                                    |
+| **Prisma**         | **Pré-montado por último** (fase final): schema + client + stub de repositório, sem conexão     | Decisão do usuário (2026-07-11)                             |
+| `.claude/`         | **Commitado** (`settings.json` + `skills/`); só `settings.local.json` gitignorado               | Decisão do usuário (2026-07-11)                             |
+| Deploy             | Vercel, zero config extra                                                                       | Brief §2                                                    |
+| Idioma do conteúdo | pt-BR                                                                                           | Público brasileiro                                          |
 
 ## 3. Arquitetura
 
@@ -76,6 +76,7 @@ docs/                       # SPEC.md, PLAN.md, ARCHITECTURE.md
 - Seletor lê `process.env.DATA_SOURCE` (`mock` | `prisma`), default `mock`. Na fase final, `prisma` resolve para o stub `PrismaDealsRepository`.
 
 **Critérios de aceite**
+
 - [ ] Nenhum arquivo de UI importa de `src/mocks/` diretamente (verificável por grep/lint).
 - [ ] Trocar `DATA_SOURCE` não exige alteração em nenhum componente.
 - [ ] Testes unitários cobrem o `MockDealsRepository` (retornos, categoria inexistente, busca).
@@ -88,6 +89,7 @@ docs/                       # SPEC.md, PLAN.md, ARCHITECTURE.md
 - Selo visual discreto "dados de demonstração" quando `DATA_SOURCE=mock`.
 
 **Critérios de aceite**
+
 - [ ] ≥3 produtos por categoria, todos tipados e com `isMock: true`.
 - [ ] Selo de demonstração visível com mock e removível trocando a env.
 
@@ -98,6 +100,7 @@ docs/                       # SPEC.md, PLAN.md, ARCHITECTURE.md
 - `data/private/` no `.gitignore`; `data/private/affiliates.example.ts` commitado como referência.
 
 **Critérios de aceite**
+
 - [ ] Nenhum link de oferta montado fora de `buildAffiliateUrl()`.
 - [ ] Teste unitário do utilitário.
 - [ ] Build funciona sem nenhum arquivo real em `data/private/`.
@@ -112,6 +115,7 @@ docs/                       # SPEC.md, PLAN.md, ARCHITECTURE.md
 - Tipografia via `next/font`; ícones com lucide-react.
 
 **Critérios de aceite**
+
 - [ ] Todos os tokens documentados em `docs/ARCHITECTURE.md`.
 - [ ] Zero cor hardcoded em componentes (auditável).
 - [ ] Contraste texto/fundo ≥ AA.
@@ -126,6 +130,7 @@ Conforme brief §6 (spec integral na skill `ght-splash`):
 - Implementação em SVG/CSS puro (`stroke-dasharray`/`dashoffset`, `drop-shadow`), componente client isolado em `components/splash/`. Sem libs de animação.
 
 **Critérios de aceite**
+
 - [ ] Splash aparece no primeiro load e não reaparece na mesma sessão.
 - [ ] `prefers-reduced-motion` respeitado.
 - [ ] Nenhuma dependência de animação adicionada.
@@ -137,6 +142,7 @@ Conforme brief §6 (spec integral na skill `ght-splash`):
 - **Header enxuto com busca** client-side sobre os mocks (pronta para virar server/DB depois).
 
 **Critérios de aceite**
+
 - [ ] Sidebar navegável por teclado (foco visível, ordem lógica).
 - [ ] Drawer mobile abre/fecha com toque e `Esc`.
 - [ ] Cada seção da home leva à categoria correspondente.
@@ -148,6 +154,7 @@ Conforme brief §6 (spec integral na skill `ght-splash`):
 Anatomia do card: imagem · título · **preço atual em destaque** · preço antigo riscado · selo de % de desconto · **ícone circular da loja** · botão **"Ver oferta"** via `buildAffiliateUrl()` (`rel="sponsored noopener"`, nova aba) · JSON-LD Product/Offer.
 
 **Critérios de aceite**
+
 - [ ] Card renderiza todos os elementos com dados mock.
 - [ ] Categoria inexistente → 404 (`notFound()`).
 - [ ] Teste de componente do card.
@@ -158,6 +165,7 @@ Anatomia do card: imagem · título · **preço atual em destaque** · preço an
 - Confirmação = verde, negação/cancelar = vermelho, consistente em todo o app.
 
 **Critérios de aceite**
+
 - [ ] Navegação por teclado completa (trap, Esc, retorno de foco).
 - [ ] Semântica de cores respeitada.
 
@@ -172,6 +180,7 @@ Anatomia do card: imagem · título · **preço atual em destaque** · preço an
 - Performance: SSG/SSR onde couber, `next/image`, `next/font`. Meta: Lighthouse ~100 em SEO/Perf/Best Practices/A11y.
 
 **Critérios de aceite**
+
 - [ ] Toda rota tem metadata única + canonical.
 - [ ] JSON-LD válido (testável com validador de schema).
 - [ ] `sitemap.xml`, `robots.txt` e `llms.txt` servidos corretamente.
@@ -185,6 +194,7 @@ Anatomia do card: imagem · título · **preço atual em destaque** · preço an
 - Documentação em `ARCHITECTURE.md` de como plugar o banco (env `DATABASE_URL` + `DATA_SOURCE=prisma`).
 
 **Critérios de aceite**
+
 - [ ] `npx prisma validate` e `npx prisma generate` passam sem banco.
 - [ ] Build do Next não exige `DATABASE_URL`.
 - [ ] Trocar para Prisma no futuro = implementar os métodos do stub, nada na UI.
@@ -198,18 +208,19 @@ Anatomia do card: imagem · título · **preço atual em destaque** · preço an
 - **LICENSE MIT** e `docs/ARCHITECTURE.md`.
 
 **Critérios de aceite**
+
 - [ ] CI verde no GitHub.
 - [ ] Commit fora do padrão é bloqueado pelo commitlint.
 - [ ] `npm run typecheck && npm run lint && npm test && npm run build` passam localmente.
 
 ## 12. Skills do projeto (`.claude/skills/` — commitadas)
 
-| Skill | Conteúdo | Quando usar |
-|---|---|---|
-| `ght-design-system` | Tokens escuro+verde, verde=confirmar/vermelho=negar, linhas de energia, tipografia/ícones | Ao estilizar qualquer UI |
-| `ght-splash` | Spec da abertura (geometria, curva ~40°, círculo, pulso, timing, reduced-motion, 1x/sessão) | Ao criar/ajustar a abertura |
-| `ght-product-card` | Anatomia do card, `buildAffiliateUrl`, `rel="sponsored"` | Ao mexer em cards/listagens |
-| `ght-mock-data` | Onde/como criar mocks, `isMock`, 3+/categoria, `data/private/`, troca p/ Prisma | Ao criar/editar dados |
-| `ght-seo` | Checklist SEO (metadata, canonical, sitemap/robots, JSON-LD, llms.txt, crawlers IA) | Ao criar rotas/páginas |
+| Skill               | Conteúdo                                                                                    | Quando usar                 |
+| ------------------- | ------------------------------------------------------------------------------------------- | --------------------------- |
+| `ght-design-system` | Tokens escuro+verde, verde=confirmar/vermelho=negar, linhas de energia, tipografia/ícones   | Ao estilizar qualquer UI    |
+| `ght-splash`        | Spec da abertura (geometria, curva ~40°, círculo, pulso, timing, reduced-motion, 1x/sessão) | Ao criar/ajustar a abertura |
+| `ght-product-card`  | Anatomia do card, `buildAffiliateUrl`, `rel="sponsored"`                                    | Ao mexer em cards/listagens |
+| `ght-mock-data`     | Onde/como criar mocks, `isMock`, 3+/categoria, `data/private/`, troca p/ Prisma             | Ao criar/editar dados       |
+| `ght-seo`           | Checklist SEO (metadata, canonical, sitemap/robots, JSON-LD, llms.txt, crawlers IA)         | Ao criar rotas/páginas      |
 
 Convenções sempre-ativas ficam no `CLAUDE.md` (raiz), incluindo a política de autonomia (brief §1).

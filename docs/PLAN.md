@@ -94,10 +94,10 @@
 
 ## Riscos e mitigação
 
-| Risco | Mitigação |
-|---|---|
-| Node 22 indisponível na máquina | Instalar via winget na Fase 1 antes de qualquer scaffold |
-| APIs assíncronas do Next 16 (`params`, `cookies()` etc.) | Regra registrada no `CLAUDE.md`; typecheck pega esquecimentos |
-| Splash pesada/poluída | SVG/CSS puro, sem libs; revisar com `prefers-reduced-motion` |
-| SEO como afterthought | Fase 6 dedicada + skill `ght-seo` usada ao criar cada rota |
-| Escopo crescer (auth, banco real…) | SPEC §1 "fora de escopo"; mudanças exigem atualizar SPEC antes |
+| Risco                                                    | Mitigação                                                      |
+| -------------------------------------------------------- | -------------------------------------------------------------- |
+| Node 22 indisponível na máquina                          | Instalar via winget na Fase 1 antes de qualquer scaffold       |
+| APIs assíncronas do Next 16 (`params`, `cookies()` etc.) | Regra registrada no `CLAUDE.md`; typecheck pega esquecimentos  |
+| Splash pesada/poluída                                    | SVG/CSS puro, sem libs; revisar com `prefers-reduced-motion`   |
+| SEO como afterthought                                    | Fase 6 dedicada + skill `ght-seo` usada ao criar cada rota     |
+| Escopo crescer (auth, banco real…)                       | SPEC §1 "fora de escopo"; mudanças exigem atualizar SPEC antes |
