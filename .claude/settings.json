@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write(src/**)",
+      "Edit(src/**)",
+      "Write(app/**)",
+      "Edit(app/**)",
+      "Write(prisma/**)",
+      "Edit(prisma/**)",
+      "Write(public/**)",
+      "Write(docs/**)",
+      "Write(.claude/**)",
+      "Edit(.claude/**)",
+      "Bash(npm install *)",
+      "Bash(npm i *)",
+      "Bash(npm run *)",
+      "Bash(npm test*)",
+      "Bash(npx *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout -b *)",
+      "Bash(git log *)",
+      "Bash(npx prisma generate)",
+      "Bash(npx prisma format)",
+      "Bash(npx prisma validate)",
+      "WebSearch",
+      "WebFetch(domain:nextjs.org)",
+      "WebFetch(domain:code.claude.com)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:schema.org)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(vercel *)",
+      "Bash(npx prisma migrate *)",
+      "Bash(npx prisma db push *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(sudo *)",
+      "Bash(npx prisma migrate reset*)",
+      "Read(.env*)",
+      "Read(data/private/**)"
+    ]
+  }
+}
