@@ -1,0 +1,9 @@
+# Normaliza line endings: LF no repositório para todos os arquivos de texto
+* text=auto eol=lf
+
+# Binários
+*.ico binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
