@@ -32,6 +32,14 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# dados sensíveis (links de afiliado reais, chaves) — só exemplos são commitados
+/data/private/*
+!/data/private/*.example.ts
+
+# claude code — config pessoal fica fora do repo
+.claude/settings.local.json
 
 # vercel
 .vercel
