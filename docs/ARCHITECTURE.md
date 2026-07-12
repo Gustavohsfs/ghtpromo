@@ -56,6 +56,16 @@ desativa a animação (linha estática).
 - Server Components por padrão; `'use client'` apenas onde há estado
   (Shell, Header, Modal, navegação ativa via `usePathname`).
 
+## Splash de abertura (Fase 3)
+
+`src/components/splash/` — SVG + CSS puro (sem libs). Duas linhas de energia
+espelhadas sobem das bordas, dobram ~40° para dentro e tangenciam o círculo
+central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
+`dashoffset`, e o círculo ganha glow sincronizado (~59% do caminho). Config em
+`splash-config.ts` (1x por sessão via `sessionStorage`, ciclos, durações).
+`prefers-reduced-motion` → composição estática. Renderiza no SSR (fase
+`pending`) para não piscar conteúdo. Spec completa: skill `ght-splash`.
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).
