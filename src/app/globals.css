@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
+/* ============================================================================
+ * GHT Promoções — Design Tokens (tema escuro + verde)
+ * Fonte da verdade das cores. Nada de cor hardcoded fora daqui.
+ * Documentação: docs/ARCHITECTURE.md · skill: .claude/skills/ght-design-system
+ * ==========================================================================*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base escura */
+  --background: #05080a; /* fundo quase-preto do app */
+  --surface: #0a0f0d; /* superfícies elevadas (cards, sidebar) */
+  --surface-raised: #0e1613; /* segundo nível de elevação (hover, popover) */
+  --border: #1a2620; /* bordas sutis esverdeadas */
+
+  /* Texto */
+  --foreground: #e8f5ee; /* texto principal (contraste AAA sobre background) */
+  --muted-foreground: #93a89d; /* texto secundário (contraste AA) */
+
+  /* Verde de energia (marca/acento) */
+  --brand: #2ee88a; /* verde neon/esmeralda principal */
+  --brand-strong: #57f2a5; /* hover/realce */
+  --brand-foreground: #04130b; /* texto sobre fundo verde */
+  --brand-soft: rgba(46, 232, 138, 0.12); /* fundos/tints */
+  --brand-glow: rgba(46, 232, 138, 0.45); /* glow/sombras luminosas */
+
+  /* Destrutivo (negar/cancelar) */
+  --destructive: #ff5d5d;
+  --destructive-strong: #ff8080;
+  --destructive-foreground: #1a0505;
+  --destructive-soft: rgba(255, 93, 93, 0.12);
+
+  /* Foco */
+  --ring: var(--brand);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-glow: var(--brand-glow);
+  --color-destructive: var(--destructive);
+  --color-destructive-strong: var(--destructive-strong);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-ring: var(--ring);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* ============================================================================
+ * Motivo "linhas de energia": linha verde com pulso lento e sutil.
+ * Uso: <div class="energy-line" /> (horizontal) ou .energy-line-vertical.
+ * Respeita prefers-reduced-motion (linha estática, sem animação).
+ * ==========================================================================*/
+
+@keyframes energy-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.energy-line,
+.energy-line-vertical {
+  --energy-color: var(--brand);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--energy-color) 30%,
+    var(--energy-color) 70%,
+    transparent
+  );
+  opacity: 0.5;
+  animation: energy-pulse 4s ease-in-out infinite;
+}
+
+.energy-line {
+  height: 1px;
+  width: 100%;
+}
+
+.energy-line-vertical {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--energy-color) 30%,
+    var(--energy-color) 70%,
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .energy-line,
+  .energy-line-vertical {
+    animation: none;
+    opacity: 0.5;
+  }
 }
