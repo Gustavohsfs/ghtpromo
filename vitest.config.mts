@@ -7,6 +7,8 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
+    // Necessário para o auto-cleanup da Testing Library entre testes.
+    globals: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
