@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { Shell } from "@/components/layout/shell";
 import { Splash } from "@/components/splash/splash";
+import { DemoDataBadge } from "@/features/deals/demo-data-badge";
 
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <Splash />
         <Shell>{children}</Shell>
+        <DemoDataBadge />
       </body>
     </html>
   );
