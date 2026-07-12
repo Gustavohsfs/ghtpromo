@@ -1,0 +1,112 @@
+/* Splash de abertura — ver skill ght-splash.
+ * Fases (data-phase no overlay): playing | static | leaving.
+ * Durações vêm de variáveis CSS injetadas pelo componente (splash-config). */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+  opacity: 1;
+  transition: opacity var(--splash-fade, 600ms) ease-out;
+}
+
+.overlay[data-phase="leaving"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.svg {
+  height: min(90vh, 40rem);
+  width: auto;
+}
+
+/* Trilho: traço verde tênue permanente */
+.trail {
+  fill: none;
+  stroke: var(--color-brand);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.18;
+}
+
+/* Pulso: segmento luminoso que percorre o trilho de baixo para cima.
+ * pathLength=100 ⇒ dasharray/dashoffset em unidades percentuais. */
+.pulse {
+  fill: none;
+  stroke: var(--color-brand-strong);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  stroke-dashoffset: 14; /* escondido antes do início do path */
+  filter: drop-shadow(0 0 6px var(--color-brand-glow));
+  opacity: 0;
+}
+
+.overlay[data-phase="playing"] .pulse {
+  opacity: 1;
+  animation: splash-pulse var(--splash-pulse-duration, 3200ms) ease-in-out var(--splash-cycles, 1)
+    both;
+}
+
+@keyframes splash-pulse {
+  from {
+    stroke-dashoffset: 14;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+/* Círculo central: ganha glow quando o pulso o atinge (~59% do caminho) */
+.circle {
+  fill: var(--color-surface);
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+}
+
+.overlay[data-phase="playing"] .circle {
+  animation: splash-circle-glow var(--splash-pulse-duration, 3200ms) ease-in-out
+    var(--splash-cycles, 1) both;
+}
+
+/* Versão estática (prefers-reduced-motion): glow suave constante, sem pulso */
+.overlay[data-phase="static"] .circle {
+  stroke: var(--color-brand);
+  filter: drop-shadow(0 0 12px var(--color-brand-glow));
+}
+
+@keyframes splash-circle-glow {
+  0%,
+  48% {
+    stroke: var(--color-border);
+    filter: none;
+  }
+  58%,
+  70% {
+    stroke: var(--color-brand);
+    filter: drop-shadow(0 0 20px var(--color-brand-glow));
+  }
+  100% {
+    stroke: var(--color-brand);
+    filter: drop-shadow(0 0 8px var(--color-brand-glow));
+  }
+}
+
+.logo {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.logoGht {
+  fill: var(--color-foreground);
+}
+
+.logoPromo {
+  fill: var(--color-brand);
+}
