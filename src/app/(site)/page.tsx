@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
+
 import { getDealsRepository } from "@/data/repository";
 import { DealsSection } from "@/features/deals/deals-section";
 import { ProductCard } from "@/features/deals/product-card";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** Home: destaques do dia + uma seção por categoria (estilo garimpeiros). */
 export default async function Home() {
