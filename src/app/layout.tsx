@@ -6,6 +6,8 @@ import { Splash } from "@/components/splash/splash";
 import { getDealsRepository } from "@/data/repository";
 import { buildCategoryNavItems } from "@/features/categories/nav";
 import { DemoDataBadge } from "@/features/deals/demo-data-badge";
+import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/lib/jsonld";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
@@ -20,8 +22,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GHT Promoções",
-  description: "Vitrine de promoções e ofertas de lojas oficiais, organizadas por categoria.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — as melhores ofertas num só lugar`,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: SITE_NAME,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default async function RootLayout({
@@ -35,6 +50,8 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={webSiteJsonLd()} />
         <Splash />
         <Shell navItems={navItems}>{children}</Shell>
         <DemoDataBadge />

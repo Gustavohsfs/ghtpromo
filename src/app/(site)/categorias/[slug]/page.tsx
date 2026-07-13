@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { getDealsRepository } from "@/data/repository";
 import { ProductCard } from "@/features/deals/product-card";
+import { breadcrumbJsonLd, itemListJsonLd, JsonLd } from "@/lib/jsonld";
 
 /** Pré-renderiza todas as categorias no build (SSG). */
 export async function generateStaticParams() {
@@ -15,8 +16,14 @@ export async function generateMetadata(props: PageProps<"/categorias/[slug]">): 
   const category = await getDealsRepository().getCategoryBySlug(slug);
   if (!category) return {};
   return {
-    title: category.name,
+    title: `${category.name} em promoção`,
     description: category.description,
+    alternates: { canonical: `/categorias/${category.slug}` },
+    openGraph: {
+      title: `${category.name} em promoção`,
+      description: category.description,
+      url: `/categorias/${category.slug}`,
+    },
   };
 }
 
@@ -31,6 +38,8 @@ export default async function CategoryPage(props: PageProps<"/categorias/[slug]"
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
+      <JsonLd data={itemListJsonLd(category, deals)} />
+      <JsonLd data={breadcrumbJsonLd(category)} />
       <header className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold tracking-tight">{category.name}</h1>
         <p className="text-muted-foreground text-sm">{category.description}</p>

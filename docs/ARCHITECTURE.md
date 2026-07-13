@@ -66,6 +66,20 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 `prefers-reduced-motion` → composição estática. Renderiza no SSR (fase
 `pending`) para não piscar conteúdo. Spec completa: skill `ght-splash`.
 
+## SEO e descoberta (Fase 6)
+
+- **Identidade**: `src/lib/site.ts` — `SITE_URL` (`NEXT_PUBLIC_SITE_URL`, fallback
+  `https://ghtpromo.com.br`), nome, descrição, lista de crawlers de IA.
+- **Metadata**: `metadataBase` + title template no layout raiz; canonical por
+  rota (`alternates.canonical`); OG/Twitter defaults; `/busca` com `noindex`.
+- **JSON-LD**: `src/lib/jsonld.tsx` — `Organization` + `WebSite`/`SearchAction`
+  (layout), `ItemList` com `Product`/`Offer` + `BreadcrumbList` (categoria).
+- **Descoberta**: `app/sitemap.ts` (home + categorias), `app/robots.ts`
+  (crawlers de IA permitidos; `ALLOW_AI_CRAWLERS=false` bloqueia),
+  `public/llms.txt`.
+- **OG images**: `ImageResponse` na raiz e por categoria; paleta espelhada em
+  `src/lib/og.ts` (Satori não lê CSS vars).
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).
