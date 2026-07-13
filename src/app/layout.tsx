@@ -49,7 +49,10 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      {/* suppressHydrationWarning: extensões de navegador injetam atributos
+          no <body> antes da hidratação (ex.: bis_register), gerando falso
+          aviso de mismatch. Suprime SÓ atributos deste elemento. */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />
         <Splash />
