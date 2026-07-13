@@ -7,7 +7,7 @@ import { getDealsRepository } from "@/data/repository";
 import { buildCategoryNavItems } from "@/features/categories/nav";
 import { DemoDataBadge } from "@/features/deals/demo-data-badge";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/lib/jsonld";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, siteIndexable } from "@/lib/site";
 
 import "./globals.css";
 
@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  // Chave geral de indexação (ALLOW_INDEXING=false enquanto houver só mocks).
+  robots: siteIndexable() ? undefined : { index: false, follow: false },
 };
 
 export default async function RootLayout({

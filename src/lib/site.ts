@@ -26,3 +26,12 @@ export const AI_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Exte
 export function aiCrawlersAllowed(): boolean {
   return process.env.ALLOW_AI_CRAWLERS !== "false";
 }
+
+/**
+ * Chave geral de indexação. Com ALLOW_INDEXING=false o site inteiro vira
+ * noindex/nofollow (meta robots) e o robots.txt bloqueia todos os crawlers —
+ * útil enquanto a vitrine roda com dados de demonstração. Default: indexável.
+ */
+export function siteIndexable(): boolean {
+  return process.env.ALLOW_INDEXING !== "false";
+}
