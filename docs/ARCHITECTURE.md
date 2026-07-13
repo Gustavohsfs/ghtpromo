@@ -66,6 +66,34 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 `prefers-reduced-motion` → composição estática. Renderiza no SSR (fase
 `pending`) para não piscar conteúdo. Spec completa: skill `ght-splash`.
 
+## Camada de dados (Fase 4)
+
+**Padrão repositório** para trocar mock ↔ banco sem tocar na UI:
+
+- `src/data/repository/deals.repository.ts` — interface `DealsRepository`
+  (categorias, ofertas por categoria, destaques, busca).
+- `MockDealsRepository` lê de `src/mocks/` (5 categorias × 3+ ofertas, tudo
+  `isMock: true`, `discountPct` derivado dos preços por factory).
+- Seletor `getDealsRepository()` por env `DATA_SOURCE` (`mock` default;
+  `prisma` chega na Fase 8). **Regra inviolável:** UI nunca importa
+  `src/mocks/` — verificável por grep.
+- Links de oferta SEMPRE via `buildAffiliateUrl()` (`src/lib/affiliate.ts`) —
+  único ponto a mudar quando os links reais chegarem
+  (`data/private/affiliates.example.ts` documenta o formato; o diretório real
+  é gitignorado).
+
+## Páginas (Fase 5)
+
+- Grupo `(site)`: home (destaques + seção por categoria),
+  `/categorias/[slug]` (SSG via `generateStaticParams`, `notFound()` para slug
+  inválido) e `/busca` (server-side sobre o repositório, `noindex`).
+- `ProductCard`: âncora real com `href` de afiliado (crawlers leem) +
+  confirmação de saída em `<dialog>` — verde continua, vermelho cancela.
+- Sidebar recebe as categorias do repositório via layout raiz (Server
+  Component) como props serializáveis; ícones resolvidos por slug no client.
+- Next 16: `params`/`searchParams` assíncronos; tipos de rota gerados
+  (`next typegen`, embutido no script `typecheck`).
+
 ## SEO e descoberta (Fase 6)
 
 - **Identidade**: `src/lib/site.ts` — `SITE_URL` (`NEXT_PUBLIC_SITE_URL`, fallback

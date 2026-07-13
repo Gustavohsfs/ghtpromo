@@ -50,7 +50,7 @@ export default async function CategoryPage(props: PageProps<"/categorias/[slug]"
       {deals.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
           {deals.map((deal) => (
-            <ProductCard key={deal.id} deal={deal} />
+            <ProductCard key={deal.id} deal={deal} titleAs="h2" />
           ))}
         </div>
       ) : (
