@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { NAV_ITEMS } from "@/features/categories/nav";
+import { DEFAULT_NAV_ICON, NAV_ICONS, type CategoryNavItem } from "@/features/categories/nav";
 import { cn } from "@/lib/cn";
 
 export interface SidebarNavProps {
+  items: CategoryNavItem[];
   /** Modo compacto (sidebar colapsada): só ícones, labels acessíveis. */
   collapsed?: boolean;
   /** Chamado ao navegar (ex.: fechar o drawer no mobile). */
@@ -14,13 +15,14 @@ export interface SidebarNavProps {
 }
 
 /** Lista de navegação por categorias, compartilhada entre sidebar e drawer. */
-export function SidebarNav({ collapsed = false, onNavigate }: SidebarNavProps) {
+export function SidebarNav({ items, collapsed = false, onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
     <nav aria-label="Categorias">
       <ul className="flex flex-col gap-1">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {items.map(({ href, label, slug }) => {
+          const Icon = NAV_ICONS[slug] ?? DEFAULT_NAV_ICON;
           const active = pathname === href;
           return (
             <li key={href}>

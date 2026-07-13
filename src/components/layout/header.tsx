@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 
 import { Logo } from "@/components/layout/logo";
@@ -9,13 +10,15 @@ export interface HeaderProps {
   onOpenMobileMenu: () => void;
 }
 
-/** Header enxuto: menu (mobile), logo e busca. */
+/** Header enxuto: menu (mobile), logo e busca (leva a /busca?q=...). */
 export function Header({ onOpenMobileMenu }: HeaderProps) {
   const [query, setQuery] = useState("");
+  const router = useRouter();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // TODO(Fase 5): buscar sobre o DealsRepository (client-side por enquanto).
+    const q = query.trim();
+    if (q) router.push(`/busca?q=${encodeURIComponent(q)}`);
   }
 
   return (
