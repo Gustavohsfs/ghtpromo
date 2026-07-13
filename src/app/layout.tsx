@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Shell } from "@/components/layout/shell";
@@ -61,8 +62,9 @@ export default async function RootLayout({
         <Splash />
         <Shell navItems={navItems}>{children}</Shell>
         <DemoDataBadge />
-        {/* Web Vitals reais em produção (no-op em dev; requer projeto na Vercel) */}
+        {/* Telemetria da Vercel (no-op em dev; requer habilitar no dashboard) */}
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
