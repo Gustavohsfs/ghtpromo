@@ -121,14 +121,19 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
   mapeamento para os tipos do domínio. **Compila mas nunca rodou contra banco
   real** — validar ao plugar.
 
-### Como plugar o banco (quando ele existir)
+### Como plugar o banco
 
-1. Crie o PostgreSQL e defina `DATABASE_URL` no `.env` (ver `.env.example`).
-2. `npx prisma migrate dev --name init` (cria as tabelas a partir do schema).
-3. Popule os dados (ex.: script de seed a partir do formato dos mocks).
+1. Defina `DATABASE_URL` no `.env` (ver `.env.example`). O CLI carrega via
+   `dotenv` importado no `prisma.config.ts` (Prisma 7 não lê `.env` sozinho).
+2. `npx prisma migrate dev` (migração inicial já commitada em
+   `prisma/migrations/`).
+3. `npm run db:seed` — popula com os dados de demonstração de `src/mocks/`
+   (idempotente; troque a fonte quando houver catálogo real).
 4. Defina `DATA_SOURCE=prisma` — **nenhum componente de UI muda**.
-5. Valide as consultas do `PrismaDealsRepository` e o selo de demonstração
-   (deve sumir sozinho).
+
+> Validado em 2026-07-13 contra Neon (PostgreSQL serverless, região
+> sa-east-1): build SSG, home, categoria e busca servidos pelo
+> `PrismaDealsRepository`; selo de demonstração some sozinho.
 
 ### Links de afiliado reais (quando chegarem)
 

@@ -1,3 +1,4 @@
+import "dotenv/config"; // Prisma 7 não carrega .env sozinho
 import { defineConfig } from "prisma/config";
 
 /**
