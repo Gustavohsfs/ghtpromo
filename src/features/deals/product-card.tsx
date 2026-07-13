@@ -9,6 +9,12 @@ import type { Deal } from "./types";
 
 export interface ProductCardProps {
   deal: Deal;
+  /**
+   * Nível do heading do título, conforme a hierarquia da página:
+   * h3 sob seções com h2 (home), h2 quando o card está direto sob o h1
+   * (categoria/busca).
+   */
+  titleAs?: "h2" | "h3";
 }
 
 /**
@@ -16,7 +22,7 @@ export interface ProductCardProps {
  * imagem, título, preço em destaque + antigo riscado + selo de desconto,
  * ícone circular da loja e botão "Ver oferta" via buildAffiliateUrl().
  */
-export function ProductCard({ deal }: ProductCardProps) {
+export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps) {
   const { product, store } = deal;
 
   return (
@@ -32,9 +38,9 @@ export function ProductCard({ deal }: ProductCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <h3 className="line-clamp-2 min-h-10 text-sm font-medium" title={product.title}>
+        <TitleTag className="line-clamp-2 min-h-10 text-sm font-medium" title={product.title}>
           {product.title}
-        </h3>
+        </TitleTag>
 
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span className="text-foreground text-lg font-bold">{formatBRL(deal.price)}</span>

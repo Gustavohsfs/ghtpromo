@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# ght<span>promo</span> ⚡
 
-First, run the development server:
+**Vitrine pública de promoções de lojas oficiais — tema escuro + verde, rápida e encontrável.**
+
+[![CI](https://github.com/Gustavohsfs/ghtpromo/actions/workflows/ci.yml/badge.svg)](https://github.com/Gustavohsfs/ghtpromo/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-2EE88A.svg)](./LICENSE)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](./tsconfig.json)
+
+🌐 **[ghtpromo.com.br](https://ghtpromo.com.br)** _(em breve)_
+
+</div>
+
+---
+
+## Sobre
+
+O **GHT Promoções** é uma vitrine de ofertas de afiliados no estilo
+[garimpeiros](https://garimpeiros.com.br): produtos de lojas oficiais
+(Amazon, Magazine Luiza, KaBuM!, Casas Bahia, Fast Shop) organizados por
+categoria, com preço atual, preço anterior riscado, selo de desconto e link
+direto para a loja.
+
+Este repositório também é **vitrine de engenharia**: arquitetura por domínio,
+Server Components por padrão, camada de dados plugável, SEO completo e testes
+— construído com **Spec-Driven Development** (spec e plano em [`docs/`](./docs)).
+
+> 🎭 **Dados de demonstração**: enquanto não há banco nem links de afiliado
+> reais, tudo roda sobre mocks commitados (`src/mocks/`, todos com
+> `isMock: true`) atrás de uma interface de repositório. Trocar para o banco
+> não altera nenhum componente de UI.
+
+## Destaques
+
+- 🎬 **Splash de abertura** em SVG/CSS puro: linhas de energia convergem para o
+  logo com um pulso sincronizado — 1x por sessão, respeita
+  `prefers-reduced-motion`
+- 🌑 **Design system escuro + verde** com tokens CSS (zero cor hardcoded) e
+  semântica fixa: verde confirma, vermelho cancela
+- 🧱 **Padrão repositório**: `DealsRepository` → mock hoje, Prisma depois, via
+  env `DATA_SOURCE` — a UI nunca sabe a diferença
+- 🔗 **Links de afiliado centralizados** em `buildAffiliateUrl()` com
+  `rel="sponsored noopener"` e confirmação de saída acessível (`<dialog>`)
+- 🔍 **SEO de primeira**: canonical por rota, JSON-LD
+  (Organization/WebSite/ItemList/Product/Offer/BreadcrumbList), sitemap,
+  robots com **crawlers de IA permitidos**, OG images geradas em runtime e
+  [`llms.txt`](./public/llms.txt)
+- ♿ **A11y desde o início**: navegação por teclado, foco visível, modais e
+  drawer sobre `<dialog>` nativo
+
+## Stack
+
+|           |                                                                     |
+| --------- | ------------------------------------------------------------------- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack) + React 19 |
+| Linguagem | TypeScript `strict` (zero `any`)                                    |
+| Estilo    | Tailwind CSS v4 (tokens via `@theme`)                               |
+| Dados     | Mocks tipados + Prisma (schema pronto, sem conexão)                 |
+| Testes    | Vitest + Testing Library                                            |
+| Qualidade | ESLint 9 + Prettier + Husky + lint-staged + commitlint              |
+| CI/Deploy | GitHub Actions · Vercel                                             |
+
+## Como rodar
+
+Pré-requisito: **Node 22** (`.nvmrc`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Scripts úteis:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run typecheck  # next typegen + tsc --noEmit
+npm run lint       # eslint
+npm test           # vitest
+npm run build      # build de produção
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Variáveis de ambiente em [`.env.example`](./.env.example) — o default
+(`DATA_SOURCE=mock`) funciona sem configurar nada.
 
-## Learn More
+## Arquitetura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/              # rotas (App Router), sitemap, robots, OG images
+  components/       # ui/ (primitivos) · layout/ (shell) · splash/
+  features/         # deals/ e categories/ — código por domínio
+  data/repository/  # DealsRepository (interface) + implementações
+  mocks/            # dados de demonstração (commitados, isMock)
+  lib/              # affiliate, seo/jsonld, site, cn, format
+data/private/       # segredos futuros (gitignorado; só *.example.ts entra)
+docs/               # SPEC.md · PLAN.md · ARCHITECTURE.md
+.claude/            # skills de domínio + settings (parte do showcase)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Decisões, tokens e trade-offs documentados em
+[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md); o quê/porquê de cada feature
+em [`docs/SPEC.md`](./docs/SPEC.md).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Roadmap
 
-## Deploy on Vercel
+- [x] Fundação (Next 16 + TS strict + hooks de qualidade)
+- [x] Design system + shell (sidebar, header, primitivos)
+- [x] Splash de abertura
+- [x] Camada de dados mock + repositório
+- [x] Páginas (home, categoria, busca, 404)
+- [x] SEO completo
+- [x] CI + docs de vitrine
+- [x] Prisma pré-montado (schema + repositório prontos, sem conexão)
+- [ ] Deploy na Vercel · links de afiliado reais · banco de dados
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](./LICENSE) © Gustavo Henrique T.

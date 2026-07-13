@@ -66,6 +66,34 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 `prefers-reduced-motion` → composição estática. Renderiza no SSR (fase
 `pending`) para não piscar conteúdo. Spec completa: skill `ght-splash`.
 
+## Camada de dados (Fase 4)
+
+**Padrão repositório** para trocar mock ↔ banco sem tocar na UI:
+
+- `src/data/repository/deals.repository.ts` — interface `DealsRepository`
+  (categorias, ofertas por categoria, destaques, busca).
+- `MockDealsRepository` lê de `src/mocks/` (5 categorias × 3+ ofertas, tudo
+  `isMock: true`, `discountPct` derivado dos preços por factory).
+- Seletor `getDealsRepository()` por env `DATA_SOURCE` (`mock` default;
+  `prisma` chega na Fase 8). **Regra inviolável:** UI nunca importa
+  `src/mocks/` — verificável por grep.
+- Links de oferta SEMPRE via `buildAffiliateUrl()` (`src/lib/affiliate.ts`) —
+  único ponto a mudar quando os links reais chegarem
+  (`data/private/affiliates.example.ts` documenta o formato; o diretório real
+  é gitignorado).
+
+## Páginas (Fase 5)
+
+- Grupo `(site)`: home (destaques + seção por categoria),
+  `/categorias/[slug]` (SSG via `generateStaticParams`, `notFound()` para slug
+  inválido) e `/busca` (server-side sobre o repositório, `noindex`).
+- `ProductCard`: âncora real com `href` de afiliado (crawlers leem) +
+  confirmação de saída em `<dialog>` — verde continua, vermelho cancela.
+- Sidebar recebe as categorias do repositório via layout raiz (Server
+  Component) como props serializáveis; ícones resolvidos por slug no client.
+- Next 16: `params`/`searchParams` assíncronos; tipos de rota gerados
+  (`next typegen`, embutido no script `typecheck`).
+
 ## SEO e descoberta (Fase 6)
 
 - **Identidade**: `src/lib/site.ts` — `SITE_URL` (`NEXT_PUBLIC_SITE_URL`, fallback
@@ -79,6 +107,35 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
   `public/llms.txt`.
 - **OG images**: `ImageResponse` na raiz e por categoria; paleta espelhada em
   `src/lib/og.ts` (Satori não lê CSS vars).
+
+## Prisma pré-montado (Fase 8 — sem banco conectado)
+
+- `prisma/schema.prisma`: `Category`, `Store`, `Product`, `Deal` (PostgreSQL),
+  espelhando `src/features/deals/types.ts`. `isMock` não existe no banco — o
+  mapeamento do repositório define `isMock: false`.
+- Prisma 7: client gerado em `src/generated/prisma` (gitignorado; recriado no
+  `postinstall`), conexão fora do schema — CLI via `prisma.config.ts`, runtime
+  via driver adapter `@prisma/adapter-pg` no singleton lazy
+  `src/server/prisma.ts` (só instancia na primeira consulta).
+- `PrismaDealsRepository` implementa a interface com consultas completas e
+  mapeamento para os tipos do domínio. **Compila mas nunca rodou contra banco
+  real** — validar ao plugar.
+
+### Como plugar o banco (quando ele existir)
+
+1. Crie o PostgreSQL e defina `DATABASE_URL` no `.env` (ver `.env.example`).
+2. `npx prisma migrate dev --name init` (cria as tabelas a partir do schema).
+3. Popule os dados (ex.: script de seed a partir do formato dos mocks).
+4. Defina `DATA_SOURCE=prisma` — **nenhum componente de UI muda**.
+5. Valide as consultas do `PrismaDealsRepository` e o selo de demonstração
+   (deve sumir sozinho).
+
+### Links de afiliado reais (quando chegarem)
+
+1. Copie `data/private/affiliates.example.ts` → `data/private/affiliates.ts`
+   (gitignorado) e preencha as URLs com sua tag.
+2. Ligue a leitura em `buildAffiliateUrl()` (`src/lib/affiliate.ts`) — único
+   ponto do app que monta link de oferta.
 
 ## Testes (Fase 2)
 
