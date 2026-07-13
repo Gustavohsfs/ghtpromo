@@ -1,21 +1,44 @@
-import { House, Laptop, Refrigerator, Smartphone, Tv, Zap, type LucideIcon } from "lucide-react";
+import {
+  House,
+  Laptop,
+  Refrigerator,
+  Smartphone,
+  Tag,
+  Tv,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 
-export interface NavItem {
+import type { Category } from "@/features/deals/types";
+
+/** Item de navegação serializável (Server Component → Shell client). */
+export interface CategoryNavItem {
   href: string;
   label: string;
-  icon: LucideIcon;
+  /** Slug usado para resolver o ícone no client (NAV_ICONS). */
+  slug: string;
 }
 
-/**
- * Itens de navegação da sidebar.
- * TODO(Fase 5): derivar as categorias do DealsRepository em vez desta lista
- * estática — os slugs devem casar com os dos mocks/banco.
- */
-export const NAV_ITEMS: readonly NavItem[] = [
-  { href: "/", label: "Início", icon: House },
-  { href: "/categorias/eletronicos", label: "Eletrônicos", icon: Zap },
-  { href: "/categorias/geladeiras", label: "Geladeiras", icon: Refrigerator },
-  { href: "/categorias/tvs", label: "TVs", icon: Tv },
-  { href: "/categorias/computadores", label: "Computadores", icon: Laptop },
-  { href: "/categorias/iphones", label: "iPhones", icon: Smartphone },
-];
+/** Monta os itens da sidebar a partir das categorias do DealsRepository. */
+export function buildCategoryNavItems(categories: Category[]): CategoryNavItem[] {
+  return [
+    { href: "/", label: "Início", slug: "inicio" },
+    ...categories.map((category) => ({
+      href: `/categorias/${category.slug}`,
+      label: category.name,
+      slug: category.slug,
+    })),
+  ];
+}
+
+/** Ícones por slug — categorias novas caem no DEFAULT_NAV_ICON. */
+export const NAV_ICONS: Record<string, LucideIcon> = {
+  inicio: House,
+  eletronicos: Zap,
+  geladeiras: Refrigerator,
+  tvs: Tv,
+  computadores: Laptop,
+  iphones: Smartphone,
+};
+
+export const DEFAULT_NAV_ICON: LucideIcon = Tag;

@@ -31,6 +31,15 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "h-11 px-6 text-base",
 };
 
+/** Classes de botão para elementos que não são <button> (ex.: <a> de oferta). */
+export function buttonClasses(
+  variant: ButtonVariant = "confirm",
+  size: ButtonSize = "md",
+  className?: string,
+): string {
+  return cn(baseClasses, variantClasses[variant], sizeClasses[size], className);
+}
+
 /** Botão base do design system. Ver skill ght-design-system. */
 export function Button({
   variant = "confirm",
@@ -39,11 +48,5 @@ export function Button({
   className,
   ...props
 }: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
-      {...props}
-    />
-  );
+  return <button type={type} className={buttonClasses(variant, size, className)} {...props} />;
 }

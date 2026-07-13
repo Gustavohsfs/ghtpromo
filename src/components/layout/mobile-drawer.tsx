@@ -5,8 +5,10 @@ import { X } from "lucide-react";
 
 import { Logo } from "@/components/layout/logo";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
+import type { CategoryNavItem } from "@/features/categories/nav";
 
 export interface MobileDrawerProps {
+  navItems: CategoryNavItem[];
   open: boolean;
   onClose: () => void;
 }
@@ -15,7 +17,7 @@ export interface MobileDrawerProps {
  * Drawer de navegação no mobile, sobre <dialog> nativo (foco preso, Esc fecha,
  * foco retorna ao botão do header ao fechar).
  */
-export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
+export function MobileDrawer({ navItems, open, onClose }: MobileDrawerProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
         </button>
       </div>
       <div className="p-3">
-        <SidebarNav onNavigate={onClose} />
+        <SidebarNav items={navItems} onNavigate={onClose} />
       </div>
     </dialog>
   );

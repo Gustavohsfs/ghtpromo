@@ -3,9 +3,11 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import { SidebarNav } from "@/components/layout/sidebar-nav";
+import type { CategoryNavItem } from "@/features/categories/nav";
 import { cn } from "@/lib/cn";
 
 export interface SidebarProps {
+  navItems: CategoryNavItem[];
   collapsed: boolean;
   onToggleCollapsed: () => void;
 }
@@ -14,7 +16,7 @@ export interface SidebarProps {
  * Sidebar de desktop: colapsável para modo só-ícones. A borda direita carrega
  * o motivo "linha de energia" (pulso sutil, ver globals.css).
  */
-export function Sidebar({ collapsed, onToggleCollapsed }: SidebarProps) {
+export function Sidebar({ navItems, collapsed, onToggleCollapsed }: SidebarProps) {
   return (
     <aside
       className={cn(
@@ -23,7 +25,7 @@ export function Sidebar({ collapsed, onToggleCollapsed }: SidebarProps) {
       )}
     >
       <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
-        <SidebarNav collapsed={collapsed} />
+        <SidebarNav items={navItems} collapsed={collapsed} />
       </div>
 
       <div className="p-3">
