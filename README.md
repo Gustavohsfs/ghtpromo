@@ -111,7 +111,7 @@ em [`docs/SPEC.md`](./docs/SPEC.md).
 - [x] Páginas (home, categoria, busca, 404)
 - [x] SEO completo
 - [x] CI + docs de vitrine
-- [ ] Prisma pré-montado (schema + stub, sem conexão)
+- [x] Prisma pré-montado (schema + repositório prontos, sem conexão)
 - [ ] Deploy na Vercel · links de afiliado reais · banco de dados
 
 ## Licença

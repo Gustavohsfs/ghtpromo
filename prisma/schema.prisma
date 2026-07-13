@@ -1,0 +1,69 @@
+// GHT Promoções — schema pré-montado (Fase 8, ainda SEM banco conectado).
+// Espelha os tipos do domínio em src/features/deals/types.ts — manter em
+// sincronia. `isMock` não existe aqui de propósito: dados do banco são reais;
+// o mapeamento no PrismaDealsRepository define isMock: false.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Prisma 7: a connection URL não vive mais aqui — migrations usam
+// prisma.config.ts e o runtime usa driver adapter no PrismaClient
+// (src/server/prisma.ts), ambos lendo DATABASE_URL.
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  slug        String    @id
+  name        String
+  description String
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Store {
+  id      String @id
+  name    String
+  iconUrl String @map("icon_url")
+  deals   Deal[]
+
+  @@map("stores")
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  title        String
+  imageUrl     String   @map("image_url")
+  category     Category @relation(fields: [categorySlug], references: [slug])
+  categorySlug String   @map("category_slug")
+  deals        Deal[]
+
+  @@index([categorySlug])
+  @@map("products")
+}
+
+model Deal {
+  id           String   @id @default(cuid())
+  product      Product  @relation(fields: [productId], references: [id])
+  productId    String   @map("product_id")
+  store        Store    @relation(fields: [storeId], references: [id])
+  storeId      String   @map("store_id")
+  /// Preço atual em BRL.
+  price        Decimal  @db.Decimal(10, 2)
+  /// Preço anterior ("de"), exibido riscado.
+  oldPrice     Decimal  @map("old_price") @db.Decimal(10, 2)
+  /// Desconto percentual inteiro (derivado de price/oldPrice na escrita).
+  discountPct  Int      @map("discount_pct")
+  affiliateUrl String   @map("affiliate_url")
+  featured     Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([productId])
+  @@index([storeId])
+  @@index([featured])
+  @@map("deals")
+}

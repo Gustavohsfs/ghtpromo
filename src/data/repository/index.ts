@@ -1,5 +1,6 @@
 import type { DealsRepository } from "./deals.repository";
 import { MockDealsRepository } from "./mock-deals.repository";
+import { PrismaDealsRepository } from "./prisma-deals.repository";
 
 export type { DealsRepository } from "./deals.repository";
 
@@ -18,18 +19,18 @@ export function isMockDataSource(): boolean {
 }
 
 const mockRepository = new MockDealsRepository();
+const prismaRepository = new PrismaDealsRepository();
 
 /**
  * Ponto único de obtenção do repositório. Trocar de fonte de dados é trocar
- * a env DATA_SOURCE — nenhum componente muda.
+ * a env DATA_SOURCE — nenhum componente muda. O client Prisma só é
+ * instanciado na primeira consulta (lazy), então o default mock funciona
+ * sem banco nem DATABASE_URL.
  */
 export function getDealsRepository(): DealsRepository {
   switch (getDataSource()) {
     case "prisma":
-      // PrismaDealsRepository chega na fase final (docs/PLAN.md, Fase 8).
-      throw new Error(
-        "DATA_SOURCE=prisma ainda não está disponível: o PrismaDealsRepository é montado na Fase 8.",
-      );
+      return prismaRepository;
     case "mock":
       return mockRepository;
   }

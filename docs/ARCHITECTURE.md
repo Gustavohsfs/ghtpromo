@@ -108,6 +108,35 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 - **OG images**: `ImageResponse` na raiz e por categoria; paleta espelhada em
   `src/lib/og.ts` (Satori não lê CSS vars).
 
+## Prisma pré-montado (Fase 8 — sem banco conectado)
+
+- `prisma/schema.prisma`: `Category`, `Store`, `Product`, `Deal` (PostgreSQL),
+  espelhando `src/features/deals/types.ts`. `isMock` não existe no banco — o
+  mapeamento do repositório define `isMock: false`.
+- Prisma 7: client gerado em `src/generated/prisma` (gitignorado; recriado no
+  `postinstall`), conexão fora do schema — CLI via `prisma.config.ts`, runtime
+  via driver adapter `@prisma/adapter-pg` no singleton lazy
+  `src/server/prisma.ts` (só instancia na primeira consulta).
+- `PrismaDealsRepository` implementa a interface com consultas completas e
+  mapeamento para os tipos do domínio. **Compila mas nunca rodou contra banco
+  real** — validar ao plugar.
+
+### Como plugar o banco (quando ele existir)
+
+1. Crie o PostgreSQL e defina `DATABASE_URL` no `.env` (ver `.env.example`).
+2. `npx prisma migrate dev --name init` (cria as tabelas a partir do schema).
+3. Popule os dados (ex.: script de seed a partir do formato dos mocks).
+4. Defina `DATA_SOURCE=prisma` — **nenhum componente de UI muda**.
+5. Valide as consultas do `PrismaDealsRepository` e o selo de demonstração
+   (deve sumir sozinho).
+
+### Links de afiliado reais (quando chegarem)
+
+1. Copie `data/private/affiliates.example.ts` → `data/private/affiliates.ts`
+   (gitignorado) e preencha as URLs com sua tag.
+2. Ligue a leitura em `buildAffiliateUrl()` (`src/lib/affiliate.ts`) — único
+   ponto do app que monta link de oferta.
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).

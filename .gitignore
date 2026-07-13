@@ -41,6 +41,9 @@ yarn-error.log*
 # claude code — config pessoal fica fora do repo
 .claude/settings.local.json
 
+# prisma — client gerado (recriado por `prisma generate` no postinstall)
+/src/generated/
+
 # vercel
 .vercel
 
