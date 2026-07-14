@@ -152,7 +152,13 @@ Os links reais vivem **no banco** (`deals.affiliate_url`), não no código:
    `discountPct` derivado). A KaBuM hoje envia as colunas de preço antigo
    vazias — nesse caso ficam nulos e o card omite riscado/selo (o log do
    import mostra `comPrecoAntigo` e uma amostra dos valores brutos).
-4. `npm run db:seed` restaura as ofertas demo se precisar (dev/showcase).
+4. **Expiração**: o feed é a fonte da verdade do catálogo da loja — a cada
+   importação, ofertas da loja que saíram do feed ou ficaram sem estoque são
+   removidas do banco (e produtos órfãos junto), com contagem `expiradas` no
+   log. Ofertas demo ficam de fora (geridas por `db:seed`/`--clean-demo`).
+   Como o site é SSG, a mudança só aparece no próximo deploy — a automação
+   (cron + deploy hook) está no backlog do `PLAN.md`.
+5. `npm run db:seed` restaura as ofertas demo se precisar (dev/showcase).
 
 ### Ingestão multi-loja (plano — executar quando a 2ª fonte existir)
 

@@ -19,7 +19,9 @@ import { getPrismaClient } from "../src/server/prisma";
  * Descrição e preço antigo (riscado) vêm do feed quando exportados
  * (product_short_description/description, product_price_old/rrp_price);
  * ausentes, ficam nulos e o card omite os blocos correspondentes.
- * Idempotente: reimportar atualiza preço/estoque/descrição.
+ * Idempotente: reimportar atualiza preço/estoque/descrição. O feed é a fonte
+ * da verdade do catálogo da loja: ofertas que saíram dele (ou sem estoque)
+ * são removidas a cada importação (expiração).
  */
 
 const FEED_PATH = "data/private/awin-kabum.csv";
@@ -158,6 +160,22 @@ async function main() {
     data: { featured: true },
   });
 
+  // Expiração: o feed é a fonte da verdade do catálogo da loja. Ofertas da
+  // KaBuM que saíram do feed ou ficaram sem estoque são removidas (as demo
+  // ficam de fora — são geridas por db:seed/--clean-demo).
+  const staleDeals = await prisma.deal.findMany({
+    where: {
+      storeId: STORE_ID,
+      id: { notIn: importedDealIds.map((deal) => deal.id) },
+      affiliateUrl: { not: { startsWith: DEMO_URL_PREFIX } },
+    },
+    select: { id: true, productId: true },
+  });
+  await prisma.deal.deleteMany({ where: { id: { in: staleDeals.map((d) => d.id) } } });
+  await prisma.product.deleteMany({
+    where: { id: { in: staleDeals.map((d) => d.productId) }, deals: { none: {} } },
+  });
+
   let demoRemoved = 0;
   if (cleanDemo) {
     const demoDeals = await prisma.deal.findMany({
@@ -178,6 +196,7 @@ async function main() {
     comDescricao,
     comPrecoAntigo,
     destaques: featuredIds.length,
+    expiradas: staleDeals.length,
     demoRemovidas: demoRemoved,
     totalOfertasNoBanco: await prisma.deal.count(),
   });
