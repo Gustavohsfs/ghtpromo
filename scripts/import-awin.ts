@@ -3,6 +3,7 @@ import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { parse } from "csv-parse/sync";
 
+import { htmlToPlainText } from "../src/lib/html-text";
 import { getPrismaClient } from "../src/server/prisma";
 
 /**
@@ -45,19 +46,13 @@ interface FeedRow {
 const DESCRIPTION_MAX_LENGTH = 300;
 
 /**
- * Normaliza a descrição do feed: remove tags HTML e espaços repetidos e
- * limita o tamanho. Retorna null quando o feed não traz texto útil.
+ * Normaliza a descrição do feed via htmlToPlainText (remove tags, decodifica
+ * entidades HTML como &eacute;/&nbsp;, colapsa espaços e trunca). Retorna
+ * null quando o feed não traz texto útil.
  */
 function sanitizeDescription(row: FeedRow): string | null {
   const raw = row.product_short_description?.trim() || row.description?.trim() || "";
-  const text = raw
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (!text) return null;
-  if (text.length <= DESCRIPTION_MAX_LENGTH) return text;
-  const cut = text.slice(0, DESCRIPTION_MAX_LENGTH);
-  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+  return htmlToPlainText(raw, DESCRIPTION_MAX_LENGTH);
 }
 
 /**
