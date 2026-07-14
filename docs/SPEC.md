@@ -4,7 +4,7 @@
 
 ## 1. Visão geral
 
-**GHT Promoções** (`ghtpromo`) é uma **vitrine pública de promoções de afiliados** (estilo garimpeiros.com.br): tema **escuro + verde**, organizada por categorias (eletrônicos, geladeiras, TVs, computadores, iPhones), com produtos de lojas oficiais.
+**GHT Promoções** (`ghtpromo`) é uma **vitrine pública de promoções de afiliados**: tema **escuro + verde**, organizada por categorias (eletrônicos, geladeiras, TVs, computadores, iPhones), com produtos de lojas oficiais.
 
 Objetivos com peso igual:
 
@@ -149,7 +149,7 @@ Conforme brief §6 (spec integral na skill `ght-splash`):
 
 ## 7. Card de produto e página de categoria
 
-`/categorias/[slug]` lista produtos em grade estilo e-commerce (Kabum/garimpeiros).
+`/categorias/[slug]` lista produtos em grade estilo e-commerce.
 
 Anatomia do card: imagem · título · **preço atual em destaque** · preço antigo riscado · selo de % de desconto · **selo retangular com o wordmark da loja no canto superior esquerdo da imagem** · botão **"Ver oferta"** via `buildAffiliateUrl()` (`rel="sponsored noopener"`, nova aba) · JSON-LD Product/Offer.
 

@@ -5,7 +5,7 @@ description: Anatomia do card de produto e regras de link de afiliado do GHT Pro
 
 # Card de produto — anatomia
 
-Formato e-commerce/garimpeiros (tipo Kabum), usado na home e em `/categorias/[slug]`.
+Formato e-commerce (grade de ofertas), usado na home e em `/categorias/[slug]`.
 
 ## Elementos (nesta ordem visual)
 

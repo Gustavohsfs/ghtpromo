@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 /** Quantas ofertas cada seção da home mostra (o "ver todos" leva ao resto). */
 const DEALS_PER_SECTION = 8;
 
-/** Home: destaques do dia + uma seção por categoria (estilo garimpeiros). */
+/** Home: destaques do dia + uma seção por categoria. */
 export default async function Home() {
   const repository = getDealsRepository();
   const [categories, featured] = await Promise.all([

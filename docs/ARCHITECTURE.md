@@ -154,6 +154,29 @@ Os links reais vivem **no banco** (`deals.affiliate_url`), não no código:
    import mostra `comPrecoAntigo` e uma amostra dos valores brutos).
 4. `npm run db:seed` restaura as ofertas demo se precisar (dev/showcase).
 
+### Ingestão multi-loja (plano — executar quando a 2ª fonte existir)
+
+O lado da leitura já é plugável (UI → `DealsRepository` → banco); o plano é
+espelhar o padrão no lado da escrita quando entrarem novas lojas/fontes:
+
+1. **Contrato canônico** `ImportedOffer` — "uma oferta pronta para o banco",
+   independente da origem: `{ storeId, externalId, title, description,
+imageUrl, categorySlug, price, oldPrice, affiliateUrl, inStock }`.
+2. **Um adaptador por fonte** — só traduz o formato da fonte (CSV Awin, API
+   JSON, …) para `ImportedOffer[]`. O que sempre varia por loja é o
+   **mapeamento de categorias** (categoria da loja → slug da vitrine) — vira
+   configuração do adaptador, não código novo. O layout Awin é padronizado
+   entre anunciantes: nova loja Awin ≈ `{ storeId, feed, mapaDeCategorias }`.
+3. **Núcleo de importação único** — o que hoje está em `import-awin.ts` e não
+   é específico da KaBuM: upsert idempotente, `htmlToPlainText`, derivação de
+   desconto, destaques, estatísticas de log.
+
+Decisão consciente: **não generalizar antes da 2ª fonte real** — a segunda
+fonte informa onde a abstração precisa dobrar. Evoluções seguintes: Vercel
+Cron baixando o datafeed (URL autenticada da Awin em env) e tabela
+`price_history` para comparação honesta de preços ("menor dos últimos 30
+dias") já que a KaBuM não envia preço antigo.
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).

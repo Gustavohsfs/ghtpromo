@@ -9,7 +9,7 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
 [![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](./tsconfig.json)
 
-🌐 **[ghtpromo.com.br](https://ghtpromo.com.br)** _(em breve)_
+🌐 **[ghtpromo.com.br](https://ghtpromo.com.br)**
 
 </div>
 
@@ -17,19 +17,19 @@
 
 ## Sobre
 
-O **GHT Promoções** é uma vitrine de ofertas de afiliados no estilo
-[garimpeiros](https://garimpeiros.com.br): produtos de lojas oficiais
-(Amazon, Magazine Luiza, KaBuM!, Casas Bahia, Fast Shop) organizados por
-categoria, com preço atual, preço anterior riscado, selo de desconto e link
-direto para a loja.
+O **GHT Promoções** é uma vitrine de ofertas de afiliados: produtos de lojas
+oficiais organizados por categoria, com preço, descrição e link direto para a
+loja. Em produção, o catálogo é real — importado do datafeed da rede de
+afiliados **Awin** (KaBuM! hoje; mais lojas em breve) para um PostgreSQL
+(Neon) via Prisma.
 
 Este repositório também é **vitrine de engenharia**: arquitetura por domínio,
 Server Components por padrão, camada de dados plugável, SEO completo e testes
 — construído com **Spec-Driven Development** (spec e plano em [`docs/`](./docs)).
 
-> 🎭 **Dados de demonstração**: enquanto não há banco nem links de afiliado
-> reais, tudo roda sobre mocks commitados (`src/mocks/`, todos com
-> `isMock: true`) atrás de uma interface de repositório. Trocar para o banco
+> 🎭 **Modo demonstração**: sem banco configurado, tudo roda sobre mocks
+> commitados (`src/mocks/`, todos com `isMock: true`) atrás da mesma
+> interface de repositório — alternar entre mock e banco (`DATA_SOURCE`)
 > não altera nenhum componente de UI.
 
 ## Destaques
@@ -39,7 +39,7 @@ Server Components por padrão, camada de dados plugável, SEO completo e testes
   `prefers-reduced-motion`
 - 🌑 **Design system escuro + verde** com tokens CSS (zero cor hardcoded) e
   semântica fixa: verde confirma, vermelho cancela
-- 🧱 **Padrão repositório**: `DealsRepository` → mock hoje, Prisma depois, via
+- 🧱 **Padrão repositório**: `DealsRepository` → mock ou Prisma/PostgreSQL via
   env `DATA_SOURCE` — a UI nunca sabe a diferença
 - 🔗 **Links de afiliado centralizados** em `buildAffiliateUrl()` com
   `rel="sponsored noopener"` e confirmação de saída acessível (`<dialog>`)
@@ -57,7 +57,7 @@ Server Components por padrão, camada de dados plugável, SEO completo e testes
 | Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack) + React 19 |
 | Linguagem | TypeScript `strict` (zero `any`)                                    |
 | Estilo    | Tailwind CSS v4 (tokens via `@theme`)                               |
-| Dados     | Mocks tipados + Prisma (schema pronto, sem conexão)                 |
+| Dados     | PostgreSQL (Neon) via Prisma 7 · mocks tipados para dev             |
 | Testes    | Vitest + Testing Library                                            |
 | Qualidade | ESLint 9 + Prettier + Husky + lint-staged + commitlint              |
 | CI/Deploy | GitHub Actions · Vercel                                             |
@@ -112,7 +112,9 @@ em [`docs/SPEC.md`](./docs/SPEC.md).
 - [x] SEO completo
 - [x] CI + docs de vitrine
 - [x] Prisma pré-montado (schema + repositório prontos, sem conexão)
-- [ ] Deploy na Vercel · links de afiliado reais · banco de dados
+- [x] Deploy na Vercel · banco PostgreSQL (Neon) · catálogo real via Awin
+- [ ] Novas lojas (ingestão multi-fonte) · histórico de preços · importação
+      automática (cron)
 
 ## Licença
 
