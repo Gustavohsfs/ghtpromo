@@ -26,6 +26,7 @@ function mockDeal({ id, title, categorySlug, store, price, oldPrice, featured }:
     product: {
       id: `produto-${id}`,
       title,
+      description: null,
       imageUrl: `/products/${categorySlug}.svg`,
       categorySlug,
       isMock: true,

@@ -10,6 +10,7 @@ const deal: Deal = {
   product: {
     id: "produto-samsung-crystal-55",
     title: 'Smart TV Samsung 55" Crystal UHD 4K',
+    description: "Tela Crystal UHD 4K de 55 polegadas com Gaming Hub e Alexa integrada.",
     imageUrl: "/products/tvs.svg",
     categorySlug: "tvs",
     isMock: true,
@@ -37,6 +38,18 @@ describe("ProductCard", () => {
     expect(screen.getByText("R$ 3.299,00")).toBeVisible();
     expect(screen.getByText("-27%")).toBeVisible();
     expect(screen.getByText("Oferta na Magazine Luiza")).toBeInTheDocument();
+  });
+
+  it("exibe a descrição do produto quando informada", () => {
+    render(<ProductCard deal={deal} />);
+
+    expect(screen.getByText(deal.product.description as string)).toBeVisible();
+  });
+
+  it("omite a descrição quando o produto não tem uma", () => {
+    render(<ProductCard deal={{ ...deal, product: { ...deal.product, description: null } }} />);
+
+    expect(screen.queryByText(/Tela Crystal UHD 4K de 55 polegadas/)).not.toBeInTheDocument();
   });
 
   it("omite preço antigo e selo quando a oferta não tem desconto informado", () => {

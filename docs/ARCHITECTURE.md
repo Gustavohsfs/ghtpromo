@@ -146,8 +146,12 @@ Os links reais vivem **no banco** (`deals.affiliate_url`), não no código:
    para os slugs da vitrine, marca os destaques e remove ofertas demo (links
    `exemplo.ghtpromo.dev`). Idempotente: reimportar atualiza preços.
 3. `buildAffiliateUrl()` segue sendo o ponto único — entrega o que o
-   repositório fornecer. Feeds sem preço antigo geram `oldPrice`/`discountPct`
-   nulos (o card omite riscado/selo).
+   repositório fornecer. O importador também lê a descrição
+   (`product_short_description`/`description`, sanitizada e truncada) e o
+   preço antigo (`product_price_old`/`rrp_price` → `oldPrice` +
+   `discountPct` derivado). A KaBuM hoje envia as colunas de preço antigo
+   vazias — nesse caso ficam nulos e o card omite riscado/selo (o log do
+   import mostra `comPrecoAntigo` e uma amostra dos valores brutos).
 4. `npm run db:seed` restaura as ofertas demo se precisar (dev/showcase).
 
 ## Testes (Fase 2)

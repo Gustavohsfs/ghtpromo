@@ -15,8 +15,10 @@ import { getPrismaClient } from "../src/server/prisma";
  *                                              # (links exemplo.ghtpromo.dev);
  *                                              # `npm run db:seed` restaura
  *
- * O feed não traz preço antigo/desconto — oldPrice/discountPct ficam nulos e
- * o card omite o riscado/selo. Idempotente: reimportar atualiza preço/estoque.
+ * Descrição e preço antigo (riscado) vêm do feed quando exportados
+ * (product_short_description/description, product_price_old/rrp_price);
+ * ausentes, ficam nulos e o card omite os blocos correspondentes.
+ * Idempotente: reimportar atualiza preço/estoque/descrição.
  */
 
 const FEED_PATH = "data/private/awin-kabum.csv";
@@ -33,6 +35,42 @@ interface FeedRow {
   merchant_category: string;
   search_price: string;
   in_stock: string;
+  description?: string;
+  product_short_description?: string;
+  rrp_price?: string;
+  product_price_old?: string;
+}
+
+/** Tamanho máximo da descrição persistida (o card trunca em 2 linhas). */
+const DESCRIPTION_MAX_LENGTH = 300;
+
+/**
+ * Normaliza a descrição do feed: remove tags HTML e espaços repetidos e
+ * limita o tamanho. Retorna null quando o feed não traz texto útil.
+ */
+function sanitizeDescription(row: FeedRow): string | null {
+  const raw = row.product_short_description?.trim() || row.description?.trim() || "";
+  const text = raw
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  if (text.length <= DESCRIPTION_MAX_LENGTH) return text;
+  const cut = text.slice(0, DESCRIPTION_MAX_LENGTH);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
+/**
+ * Preço "de" (riscado): usa product_price_old ou, na falta, rrp_price (preço
+ * de tabela). Só vale quando maior que o preço atual — senão null e o card
+ * omite riscado/selo.
+ */
+function parseOldPrice(row: FeedRow, price: number): number | null {
+  for (const candidate of [row.product_price_old, row.rrp_price]) {
+    const value = Number(candidate);
+    if (value > price) return value;
+  }
+  return null;
 }
 
 /** merchant_category (1º nível) → slug de categoria da vitrine. */
@@ -61,6 +99,9 @@ async function main() {
 
   let imported = 0;
   let skipped = 0;
+  let comDescricao = 0;
+  let comPrecoAntigo = 0;
+  const precoAntigoBruto = new Map<string, number>();
   const importedDealIds: { id: string; price: number }[] = [];
 
   for (const row of rows) {
@@ -79,11 +120,20 @@ async function main() {
     const dealId = `deal-${productId}`;
     // CDN da KaBuM aceita https; o feed às vezes traz http.
     const imageUrl = row.merchant_image_url.replace(/^http:\/\//, "https://");
+    const description = sanitizeDescription(row);
+    const oldPrice = parseOldPrice(row, price);
+    const discountPct = oldPrice === null ? null : Math.round((1 - price / oldPrice) * 100);
+    if (description !== null) comDescricao += 1;
+    if (oldPrice !== null) comPrecoAntigo += 1;
+    // Amostra dos valores brutos das colunas de preço antigo, para diagnosticar
+    // feeds que vêm vazios ou em formato inesperado.
+    const bruto = `old="${row.product_price_old ?? ""}" rrp="${row.rrp_price ?? ""}"`;
+    precoAntigoBruto.set(bruto, (precoAntigoBruto.get(bruto) ?? 0) + 1);
 
     await prisma.product.upsert({
       where: { id: productId },
-      create: { id: productId, title: row.product_name, imageUrl, categorySlug },
-      update: { title: row.product_name, imageUrl, categorySlug },
+      create: { id: productId, title: row.product_name, description, imageUrl, categorySlug },
+      update: { title: row.product_name, description, imageUrl, categorySlug },
     });
     await prisma.deal.upsert({
       where: { id: dealId },
@@ -92,12 +142,12 @@ async function main() {
         productId,
         storeId: STORE_ID,
         price,
-        oldPrice: null,
-        discountPct: null,
+        oldPrice,
+        discountPct,
         affiliateUrl: row.aw_deep_link,
         featured: false,
       },
-      update: { price, affiliateUrl: row.aw_deep_link, featured: false },
+      update: { price, oldPrice, discountPct, affiliateUrl: row.aw_deep_link, featured: false },
     });
     importedDealIds.push({ id: dealId, price });
     imported += 1;
@@ -130,10 +180,16 @@ async function main() {
     lidas: rows.length,
     importadas: imported,
     ignoradas: skipped,
+    comDescricao,
+    comPrecoAntigo,
     destaques: featuredIds.length,
     demoRemovidas: demoRemoved,
     totalOfertasNoBanco: await prisma.deal.count(),
   });
+  if (comPrecoAntigo === 0) {
+    const amostra = [...precoAntigoBruto.entries()].slice(0, 5);
+    console.log("Nenhum preço antigo válido no feed. Valores brutos (amostra):", amostra);
+  }
 }
 
 main()

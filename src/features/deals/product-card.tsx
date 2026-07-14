@@ -50,6 +50,10 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
           {product.title}
         </TitleTag>
 
+        {product.description !== null && (
+          <p className="text-muted-foreground line-clamp-2 text-xs">{product.description}</p>
+        )}
+
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span className="text-foreground text-lg font-bold">{formatBRL(deal.price)}</span>
           {deal.oldPrice !== null && (

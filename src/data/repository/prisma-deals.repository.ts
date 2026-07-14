@@ -23,6 +23,7 @@ function mapDeal(row: DealWithRelations): Deal {
     product: {
       id: row.product.id,
       title: row.product.title,
+      description: row.product.description,
       imageUrl: row.product.imageUrl,
       categorySlug: row.product.categorySlug,
       isMock: false,

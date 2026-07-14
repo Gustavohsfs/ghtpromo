@@ -36,6 +36,8 @@ model Store {
 model Product {
   id           String   @id @default(cuid())
   title        String
+  /// Descrição curta exibida no card/JSON-LD. Nula quando a fonte não informa.
+  description  String?
   imageUrl     String   @map("image_url")
   category     Category @relation(fields: [categorySlug], references: [slug])
   categorySlug String   @map("category_slug")

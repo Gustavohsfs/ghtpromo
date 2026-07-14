@@ -16,6 +16,7 @@ const deal: Deal = {
   product: {
     id: "produto-samsung-crystal-55",
     title: 'Smart TV Samsung 55" Crystal UHD 4K',
+    description: "Tela Crystal UHD 4K de 55 polegadas com Gaming Hub.",
     imageUrl: "/products/tvs.svg",
     categorySlug: "tvs",
     isMock: true,
@@ -40,6 +41,7 @@ describe("jsonld", () => {
   it("Product embute Offer com preço em BRL e link de afiliado", () => {
     const data = productJsonLd(deal);
     expect(data["@type"]).toBe("Product");
+    expect(data.description).toBe(deal.product.description);
     const offer = data.offers as Record<string, unknown>;
     expect(offer["@type"]).toBe("Offer");
     expect(offer.price).toBe(2399);

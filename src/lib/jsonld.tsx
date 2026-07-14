@@ -43,6 +43,7 @@ export function productJsonLd(deal: Deal): JsonLdObject {
   return {
     "@type": "Product",
     name: deal.product.title,
+    ...(deal.product.description !== null && { description: deal.product.description }),
     image: absoluteUrl(deal.product.imageUrl),
     offers: {
       "@type": "Offer",

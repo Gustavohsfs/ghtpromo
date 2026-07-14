@@ -26,6 +26,11 @@ export interface Store {
 export interface Product {
   id: string;
   title: string;
+  /**
+   * Descrição curta exibida no card e no JSON-LD. Nem toda fonte informa
+   * (mocks antigos, feeds incompletos) — null omite o bloco no card.
+   */
+  description: string | null;
   imageUrl: string;
   categorySlug: Category["slug"];
   isMock: boolean;

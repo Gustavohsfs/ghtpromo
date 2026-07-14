@@ -9,6 +9,7 @@ const deal: Deal = {
   product: {
     id: "produto-echo-dot-5",
     title: "Echo Dot 5ª geração",
+    description: null,
     imageUrl: "/products/eletronicos.svg",
     categorySlug: "eletronicos",
     isMock: true,
