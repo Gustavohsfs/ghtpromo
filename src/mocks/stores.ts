@@ -37,4 +37,16 @@ export const MOCK_STORES = {
     iconUrl: "/stores/fastshop.svg",
     isMock: true,
   },
+  shopee: {
+    id: "shopee",
+    name: "Shopee",
+    iconUrl: "/stores/shopee.svg",
+    isMock: true,
+  },
+  netshoes: {
+    id: "netshoes",
+    name: "Netshoes",
+    iconUrl: "/stores/netshoes.svg",
+    isMock: true,
+  },
 } as const satisfies Record<string, Store>;

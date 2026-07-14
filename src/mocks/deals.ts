@@ -67,6 +67,22 @@ export const MOCK_DEALS: readonly Deal[] = [
     price: 494,
     oldPrice: 649,
   }),
+  mockDeal({
+    id: "jbl-tune-520bt",
+    title: "Fone de ouvido JBL Tune 520BT Bluetooth",
+    categorySlug: "eletronicos",
+    store: MOCK_STORES.shopee,
+    price: 229,
+    oldPrice: 349,
+  }),
+  mockDeal({
+    id: "amazfit-bip-5",
+    title: "Smartwatch Amazfit Bip 5 GPS",
+    categorySlug: "eletronicos",
+    store: MOCK_STORES.netshoes,
+    price: 279,
+    oldPrice: 399,
+  }),
 
   // Geladeiras
   mockDeal({
