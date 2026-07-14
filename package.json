@@ -18,7 +18,8 @@
     "test:watch": "vitest",
     "postinstall": "prisma generate",
     "prepare": "husky",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:import-awin": "tsx scripts/import-awin.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,mjs,js,jsx}": [
@@ -52,6 +53,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.3",
+    "csv-parse": "^7.0.1",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",

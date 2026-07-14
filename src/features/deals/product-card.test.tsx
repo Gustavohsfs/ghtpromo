@@ -33,10 +33,18 @@ describe("ProductCard", () => {
 
     expect(screen.getByRole("heading", { level: 3, name: deal.product.title })).toBeVisible();
     expect(screen.getByRole("img", { name: deal.product.title })).toBeInTheDocument();
-    expect(screen.getByText("R$ 2.399")).toBeVisible();
-    expect(screen.getByText("R$ 3.299")).toBeVisible();
+    expect(screen.getByText("R$ 2.399,00")).toBeVisible();
+    expect(screen.getByText("R$ 3.299,00")).toBeVisible();
     expect(screen.getByText("-27%")).toBeVisible();
     expect(screen.getByText("Oferta na Magazine Luiza")).toBeInTheDocument();
+  });
+
+  it("omite preço antigo e selo quando a oferta não tem desconto informado", () => {
+    render(<ProductCard deal={{ ...deal, oldPrice: null, discountPct: null }} />);
+
+    expect(screen.getByText("R$ 2.399,00")).toBeVisible();
+    expect(screen.queryByText(/^R\$ 3\.299/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/-\d+%/)).not.toBeInTheDocument();
   });
 
   it("aponta o link da oferta para buildAffiliateUrl com rel de afiliado", () => {

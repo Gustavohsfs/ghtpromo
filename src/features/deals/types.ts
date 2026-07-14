@@ -38,10 +38,14 @@ export interface Deal {
   store: Store;
   /** Preço atual em BRL. */
   price: number;
-  /** Preço anterior ("de") em BRL, exibido riscado. */
-  oldPrice: number;
-  /** Desconto percentual inteiro (derivado de price/oldPrice). */
-  discountPct: number;
+  /**
+   * Preço anterior ("de") em BRL, exibido riscado. Nem toda oferta real
+   * informa o preço antigo (ex.: feed da Awin) — nesse caso é null e o card
+   * omite o riscado e o selo de desconto.
+   */
+  oldPrice: number | null;
+  /** Desconto percentual inteiro (derivado de price/oldPrice); null sem oldPrice. */
+  discountPct: number | null;
   /**
    * Link da oferta. Nos mocks é uma URL fictícia; o link real virá de
    * data/private//env. A UI NUNCA usa este campo direto — sempre via

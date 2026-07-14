@@ -26,6 +26,9 @@ describe("integridade dos mocks", () => {
   it("preços e descontos são coerentes", () => {
     for (const deal of MOCK_DEALS) {
       expect(deal.price, `oferta ${deal.id}`).toBeGreaterThan(0);
+      // Todo mock nasce da factory com desconto derivado — nunca nulo.
+      expect(deal.oldPrice, `oferta ${deal.id}`).not.toBeNull();
+      if (deal.oldPrice === null) continue;
       expect(deal.oldPrice, `oferta ${deal.id}`).toBeGreaterThan(deal.price);
       expect(deal.discountPct, `oferta ${deal.id}`).toBe(
         Math.round((1 - deal.price / deal.oldPrice) * 100),

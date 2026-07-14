@@ -52,8 +52,10 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
 
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span className="text-foreground text-lg font-bold">{formatBRL(deal.price)}</span>
-          <s className="text-muted-foreground text-xs">{formatBRL(deal.oldPrice)}</s>
-          <Badge>-{deal.discountPct}%</Badge>
+          {deal.oldPrice !== null && (
+            <s className="text-muted-foreground text-xs">{formatBRL(deal.oldPrice)}</s>
+          )}
+          {deal.discountPct !== null && <Badge>-{deal.discountPct}%</Badge>}
         </div>
 
         <div className="mt-auto">

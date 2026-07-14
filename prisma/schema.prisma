@@ -53,10 +53,10 @@ model Deal {
   storeId      String   @map("store_id")
   /// Preço atual em BRL.
   price        Decimal  @db.Decimal(10, 2)
-  /// Preço anterior ("de"), exibido riscado.
-  oldPrice     Decimal  @map("old_price") @db.Decimal(10, 2)
+  /// Preço anterior ("de"), exibido riscado. Nulo quando a fonte não informa.
+  oldPrice     Decimal? @map("old_price") @db.Decimal(10, 2)
   /// Desconto percentual inteiro (derivado de price/oldPrice na escrita).
-  discountPct  Int      @map("discount_pct")
+  discountPct  Int?     @map("discount_pct")
   affiliateUrl String   @map("affiliate_url")
   featured     Boolean  @default(false)
   createdAt    DateTime @default(now()) @map("created_at")

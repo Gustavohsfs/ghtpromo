@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/** Quantas ofertas cada seção da home mostra (o "ver todos" leva ao resto). */
+const DEALS_PER_SECTION = 8;
+
 /** Home: destaques do dia + uma seção por categoria (estilo garimpeiros). */
 export default async function Home() {
   const repository = getDealsRepository();
@@ -18,7 +21,7 @@ export default async function Home() {
   const sections = await Promise.all(
     categories.map(async (category) => ({
       category,
-      deals: await repository.getDealsByCategory(category.slug),
+      deals: (await repository.getDealsByCategory(category.slug)).slice(0, DEALS_PER_SECTION),
     })),
   );
 
@@ -34,14 +37,18 @@ export default async function Home() {
           </p>
         </div>
 
-        <h2 id="destaques" className="sr-only">
-          Destaques de hoje
-        </h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
-          {featured.map((deal) => (
-            <ProductCard key={deal.id} deal={deal} />
-          ))}
-        </div>
+        {featured.length > 0 && (
+          <>
+            <h2 id="destaques" className="sr-only">
+              Destaques de hoje
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+              {featured.slice(0, 5).map((deal) => (
+                <ProductCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          </>
+        )}
         <div className="energy-line" aria-hidden />
       </section>
 

@@ -34,7 +34,7 @@ function mapDeal(row: DealWithRelations): Deal {
       isMock: false,
     },
     price: Number(row.price),
-    oldPrice: Number(row.oldPrice),
+    oldPrice: row.oldPrice === null ? null : Number(row.oldPrice),
     discountPct: row.discountPct,
     affiliateUrl: row.affiliateUrl,
     featured: row.featured,

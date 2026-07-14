@@ -135,12 +135,20 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 > sa-east-1): build SSG, home, categoria e busca servidos pelo
 > `PrismaDealsRepository`; selo de demonstração some sozinho.
 
-### Links de afiliado reais (quando chegarem)
+### Links de afiliado reais (Awin/KaBuM — ativos desde 2026-07-14)
 
-1. Copie `data/private/affiliates.example.ts` → `data/private/affiliates.ts`
-   (gitignorado) e preencha as URLs com sua tag.
-2. Ligue a leitura em `buildAffiliateUrl()` (`src/lib/affiliate.ts`) — único
-   ponto do app que monta link de oferta.
+Os links reais vivem **no banco** (`deals.affiliate_url`), não no código:
+
+1. Exporte o datafeed da Awin e salve em `data/private/awin-kabum.csv`
+   (gitignorado).
+2. `npm run db:import-awin -- --clean-demo` — importa produtos reais (nome,
+   preço, imagem do CDN da loja, `aw_deep_link`) mapeando categorias da loja
+   para os slugs da vitrine, marca os destaques e remove ofertas demo (links
+   `exemplo.ghtpromo.dev`). Idempotente: reimportar atualiza preços.
+3. `buildAffiliateUrl()` segue sendo o ponto único — entrega o que o
+   repositório fornecer. Feeds sem preço antigo geram `oldPrice`/`discountPct`
+   nulos (o card omite riscado/selo).
+4. `npm run db:seed` restaura as ofertas demo se precisar (dev/showcase).
 
 ## Testes (Fase 2)
 
