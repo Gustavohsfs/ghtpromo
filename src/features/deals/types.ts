@@ -15,7 +15,10 @@ export interface Category {
 export interface Store {
   id: string;
   name: string;
-  /** Ícone circular exibido no card (indica a loja de destino da oferta). */
+  /**
+   * Selo/wordmark retangular da loja (pill), exibido sobre o canto superior
+   * esquerdo da imagem do card — indica a loja de destino da oferta.
+   */
   iconUrl: string;
   isMock: boolean;
 }

@@ -35,6 +35,14 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover"
         />
+        {/* Selo da loja de destino (wordmark) — canto superior esquerdo */}
+        <span
+          className="absolute top-2 left-2 inline-flex overflow-hidden rounded-lg shadow-md"
+          title={`Oferta na ${store.name}`}
+        >
+          <Image src={store.iconUrl} alt="" width={80} height={24} className="h-6 w-20" />
+          <span className="sr-only">Oferta na {store.name}</span>
+        </span>
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
@@ -48,17 +56,7 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
           <Badge>-{deal.discountPct}%</Badge>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-2">
-          <span className="flex items-center" title={`Oferta na ${store.name}`}>
-            <Image
-              src={store.iconUrl}
-              alt=""
-              width={28}
-              height={28}
-              className="border-border rounded-full border"
-            />
-            <span className="sr-only">Oferta na {store.name}</span>
-          </span>
+        <div className="mt-auto">
           <DealLinkButton deal={deal} />
         </div>
       </div>

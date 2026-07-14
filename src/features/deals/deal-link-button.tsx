@@ -39,7 +39,7 @@ export function DealLinkButton({ deal }: DealLinkButtonProps) {
         target="_blank"
         rel={AFFILIATE_LINK_REL}
         onClick={handleClick}
-        className={buttonClasses("confirm", "sm")}
+        className={buttonClasses("confirm", "sm", "w-full")}
       >
         Ver oferta
         <ExternalLink className="size-3.5" aria-hidden />

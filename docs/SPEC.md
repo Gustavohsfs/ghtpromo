@@ -85,7 +85,7 @@ docs/                       # SPEC.md, PLAN.md, ARCHITECTURE.md
 
 - Tipos: `Product`, `Store`, `Category`, `Deal`. Todo item com `isMock: true` e banner de comentário no topo do arquivo.
 - **Mínimo 3 produtos por categoria**; categorias iniciais: eletrônicos, geladeiras, TVs, computadores, iPhones.
-- Campos do produto: `id`, `title`, `imageUrl` (placeholders locais em `public/`), `price`, `oldPrice`, `discountPct`, `store` (nome + `iconUrl` circular), `categorySlug`, `affiliateUrl`.
+- Campos do produto: `id`, `title`, `imageUrl` (placeholders locais em `public/`), `price`, `oldPrice`, `discountPct`, `store` (nome + `iconUrl` do selo retangular da loja), `categorySlug`, `affiliateUrl`.
 - Selo visual discreto "dados de demonstração" quando `DATA_SOURCE=mock`.
 
 **Critérios de aceite**
@@ -151,7 +151,7 @@ Conforme brief §6 (spec integral na skill `ght-splash`):
 
 `/categorias/[slug]` lista produtos em grade estilo e-commerce (Kabum/garimpeiros).
 
-Anatomia do card: imagem · título · **preço atual em destaque** · preço antigo riscado · selo de % de desconto · **ícone circular da loja** · botão **"Ver oferta"** via `buildAffiliateUrl()` (`rel="sponsored noopener"`, nova aba) · JSON-LD Product/Offer.
+Anatomia do card: imagem · título · **preço atual em destaque** · preço antigo riscado · selo de % de desconto · **selo retangular com o wordmark da loja no canto superior esquerdo da imagem** · botão **"Ver oferta"** via `buildAffiliateUrl()` (`rel="sponsored noopener"`, nova aba) · JSON-LD Product/Offer.
 
 **Critérios de aceite**
 
