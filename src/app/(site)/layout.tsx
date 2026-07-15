@@ -11,7 +11,11 @@ export default async function SiteLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const categories = await getDealsRepository().getCategories();
+  const repository = getDealsRepository();
+  const [categories, stores] = await Promise.all([
+    repository.getCategories(),
+    repository.getStores(),
+  ]);
   const navItems = buildCategoryNavItems(categories);
 
   return (
@@ -19,7 +23,12 @@ export default async function SiteLayout({
       <JsonLd data={organizationJsonLd()} />
       <JsonLd data={webSiteJsonLd()} />
       <Splash />
-      <Shell navItems={navItems}>{children}</Shell>
+      <Shell
+        navItems={navItems}
+        stores={stores.map((store) => ({ id: store.id, name: store.name }))}
+      >
+        {children}
+      </Shell>
       <DemoDataBadge />
     </>
   );

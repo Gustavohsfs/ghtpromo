@@ -1,13 +1,17 @@
 "use client";
 
+import { Suspense } from "react";
+
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import type { CategoryNavItem } from "@/features/categories/nav";
+import { ListingFilters, type ListingFiltersProps } from "@/features/deals/listing-filters";
 import { cn } from "@/lib/cn";
 
 export interface SidebarProps {
   navItems: CategoryNavItem[];
+  stores: ListingFiltersProps["stores"];
   collapsed: boolean;
   onToggleCollapsed: () => void;
 }
@@ -16,7 +20,7 @@ export interface SidebarProps {
  * Sidebar de desktop: colapsável para modo só-ícones. A borda direita carrega
  * o motivo "linha de energia" (pulso sutil, ver globals.css).
  */
-export function Sidebar({ navItems, collapsed, onToggleCollapsed }: SidebarProps) {
+export function Sidebar({ navItems, stores, collapsed, onToggleCollapsed }: SidebarProps) {
   return (
     <aside
       className={cn(
@@ -24,8 +28,13 @@ export function Sidebar({ navItems, collapsed, onToggleCollapsed }: SidebarProps
         collapsed ? "w-16" : "w-60",
       )}
     >
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-3">
         <SidebarNav items={navItems} collapsed={collapsed} />
+        {/* Filtros de listagem — só aparecem em /categorias/* e /busca.
+            Suspense: useSearchParams exige boundary em páginas estáticas. */}
+        <Suspense fallback={null}>
+          <ListingFilters stores={stores} hidden={collapsed} />
+        </Suspense>
       </div>
 
       <div className="p-3">

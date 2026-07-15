@@ -39,16 +39,37 @@ describe("MockDealsRepository", () => {
   });
 
   it("busca por título ignorando maiúsculas e acentos", async () => {
-    const byCase = await repository.searchDeals("IPHONE 15");
-    expect(byCase).toHaveLength(1);
-    expect(byCase[0]?.product.title).toBe("iPhone 15 128GB");
+    const byCase = await repository.listDeals({ searchQuery: "IPHONE 15" });
+    expect(byCase.deals).toHaveLength(1);
+    expect(byCase.deals[0]?.product.title).toBe("iPhone 15 128GB");
 
     // "geracao" sem acento deve achar "5ª geração"
-    const byAccent = await repository.searchDeals("5ª geracao");
-    expect(byAccent.length).toBeGreaterThan(0);
+    const byAccent = await repository.listDeals({ searchQuery: "5ª geracao" });
+    expect(byAccent.deals.length).toBeGreaterThan(0);
   });
 
-  it("devolve vazio para busca em branco", async () => {
-    expect(await repository.searchDeals("   ")).toEqual([]);
+  it("filtra listagem por loja e faixa de preço", async () => {
+    const byStore = await repository.listDeals({ stores: ["amazon"] });
+    expect(byStore.deals.length).toBeGreaterThan(0);
+    expect(byStore.deals.every((deal) => deal.store.id === "amazon")).toBe(true);
+
+    const byPrice = await repository.listDeals({ minPrice: 100, maxPrice: 500 });
+    expect(byPrice.deals.length).toBeGreaterThan(0);
+    expect(byPrice.deals.every((deal) => deal.price >= 100 && deal.price < 500)).toBe(true);
+  });
+
+  it("ordena por menor preço e informa paginação", async () => {
+    const listing = await repository.listDeals({ sort: "menor-preco" });
+    const prices = listing.deals.map((deal) => deal.price);
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+    expect(listing.page).toBe(1);
+    expect(listing.pageCount).toBeGreaterThanOrEqual(1);
+    expect(listing.total).toBe(listing.deals.length);
+  });
+
+  it("lista as lojas parceiras", async () => {
+    const stores = await repository.getStores();
+    expect(stores.length).toBeGreaterThanOrEqual(8);
+    expect(stores.some((store) => store.id === "mercadolivre")).toBe(true);
   });
 });

@@ -6,9 +6,12 @@ import { Header } from "@/components/layout/header";
 import { MobileDrawer } from "@/components/layout/mobile-drawer";
 import { Sidebar } from "@/components/layout/sidebar";
 import type { CategoryNavItem } from "@/features/categories/nav";
+import type { ListingFiltersProps } from "@/features/deals/listing-filters";
 
 export interface ShellProps {
   navItems: CategoryNavItem[];
+  /** Lojas para os filtros de listagem da sidebar. */
+  stores: ListingFiltersProps["stores"];
   children: ReactNode;
 }
 
@@ -16,7 +19,7 @@ export interface ShellProps {
  * Casca do app: header fixo no topo, sidebar à esquerda (drawer no mobile) e
  * área de conteúdo. Os children continuam sendo Server Components.
  */
-export function Shell({ navItems, children }: ShellProps) {
+export function Shell({ navItems, stores, children }: ShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -26,6 +29,7 @@ export function Shell({ navItems, children }: ShellProps) {
       <div className="flex flex-1">
         <Sidebar
           navItems={navItems}
+          stores={stores}
           collapsed={collapsed}
           onToggleCollapsed={() => setCollapsed((c) => !c)}
         />

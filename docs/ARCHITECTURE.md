@@ -216,6 +216,21 @@ dias") já que a KaBuM não envia preço antigo.
   anti-SSRF básico (só http(s), hosts privados bloqueados por redirect,
   timeout 8s, leitura limitada a 512KB).
 
+## Filtros e paginação (2026-07-15)
+
+- Estado na URL (`?lojas=a,b&preco=100-500&ordem=menor-preco&page=2`) —
+  parse/href em `src/features/deals/listing.ts` (puro, testado);
+  `DEALS_PAGE_SIZE = 60`.
+- `DealsRepository.listDeals()` (Prisma + mock) com filtros, ordenação,
+  `total`/`pageCount`; `getStores()` alimenta os checkboxes. `searchDeals`
+  foi absorvido por `listDeals`.
+- Sidebar: `ListingFilters` (client, só em `/categorias/*` e `/busca`,
+  dentro de `Suspense` — exigência do `useSearchParams` em página estática).
+- Paginação numerada com `rel prev/next`; SEO: `?page=N` indexável,
+  combinações filtradas `noindex,follow`. Custo assumido: a página de
+  categoria virou dinâmica (searchParams) — servida por function em `gru1`
+  ao lado do Neon; a home continua estática.
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).

@@ -100,8 +100,8 @@
    `docs/superpowers/specs/2026-07-15-cron-import-awin-design.md`).
 2. **Ingestão multi-loja** — quando a 2ª fonte existir; plano registrado em
    `ARCHITECTURE.md` ("Ingestão multi-loja").
-3. **Paginação da página de categoria** — o catálogo completo (~4k produtos)
-   é renderizado com limite de 60 por listagem; paginar quando fizer sentido.
+3. ~~**Paginação da página de categoria**~~ — ✅ feito em 2026-07-15 junto
+   com filtros na sidebar (loja/preço/ordenação) e o painel admin (SPEC §12).
 4. **Histórico de preços** (`price_history`) — comparação honesta ("menor dos
    últimos 30 dias") enquanto o feed da KaBuM não envia preço antigo.
 5. **Categorias vazias fora do sitemap/navegação** — geladeiras/tvs/iphones

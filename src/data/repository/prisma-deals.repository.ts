@@ -1,8 +1,9 @@
-import type { Category, Deal, DealSource } from "@/features/deals/types";
+import { DEALS_PAGE_SIZE } from "@/features/deals/listing";
+import type { Category, Deal, DealSource, Store } from "@/features/deals/types";
 import type { Prisma, Category as PrismaCategory } from "@/generated/prisma/client";
 import { getPrismaClient } from "@/server/prisma";
 
-import type { DealsRepository } from "./deals.repository";
+import type { DealListing, DealListQuery, DealsRepository } from "./deals.repository";
 
 type DealWithRelations = Prisma.DealGetPayload<{ include: { product: true; store: true } }>;
 
@@ -102,14 +103,52 @@ export class PrismaDealsRepository implements DealsRepository {
     return rows.map(mapDeal);
   }
 
-  async searchDeals(query: string): Promise<Deal[]> {
-    const needle = query.trim();
-    if (!needle) return [];
-    const rows = await this.client.deal.findMany({
-      where: { product: { title: { contains: needle, mode: "insensitive" } }, AND: notExpired() },
-      include: DEAL_INCLUDE,
-      take: MAX_DEALS_PER_LISTING,
-    });
-    return rows.map(mapDeal);
+  async getStores(): Promise<Store[]> {
+    const rows = await this.client.store.findMany({ orderBy: { name: "asc" } });
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      iconUrl: row.iconUrl,
+      isMock: false,
+    }));
+  }
+
+  async listDeals(query: DealListQuery): Promise<DealListing> {
+    const needle = query.searchQuery?.trim();
+    const where: Prisma.DealWhereInput = {
+      AND: [
+        notExpired(),
+        query.categorySlug ? { product: { categorySlug: query.categorySlug } } : {},
+        needle ? { product: { title: { contains: needle, mode: "insensitive" } } } : {},
+        query.stores?.length ? { storeId: { in: query.stores } } : {},
+        query.minPrice !== undefined ? { price: { gte: query.minPrice } } : {},
+        query.maxPrice != null ? { price: { lt: query.maxPrice } } : {},
+      ],
+    };
+    const orderBy: Prisma.DealOrderByWithRelationInput =
+      query.sort === "menor-preco"
+        ? { price: "asc" }
+        : query.sort === "maior-preco"
+          ? { price: "desc" }
+          : { createdAt: "desc" };
+
+    const page = Math.max(1, query.page ?? 1);
+    const [total, rows] = await Promise.all([
+      this.client.deal.count({ where }),
+      this.client.deal.findMany({
+        where,
+        include: DEAL_INCLUDE,
+        orderBy,
+        skip: (page - 1) * DEALS_PAGE_SIZE,
+        take: DEALS_PAGE_SIZE,
+      }),
+    ]);
+
+    return {
+      deals: rows.map(mapDeal),
+      total,
+      page,
+      pageCount: Math.max(1, Math.ceil(total / DEALS_PAGE_SIZE)),
+    };
   }
 }
