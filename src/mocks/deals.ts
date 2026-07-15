@@ -23,6 +23,7 @@ interface DealInput {
 function mockDeal({ id, title, categorySlug, store, price, oldPrice, featured }: DealInput): Deal {
   return {
     id,
+    source: "demo",
     product: {
       id: `produto-${id}`,
       title,

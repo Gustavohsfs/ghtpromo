@@ -72,11 +72,18 @@ model Deal {
   discountPct  Int?     @map("discount_pct")
   affiliateUrl String   @map("affiliate_url")
   featured     Boolean  @default(false)
+  /// Origem da oferta: "awin" (feed, expirada pelo cron), "manual" (painel
+  /// admin — o cron nunca toca) ou "demo" (seed de demonstração).
+  source       String   @default("awin")
+  /// Validade de oferta manual; nula = sem validade. Consultas públicas
+  /// excluem ofertas vencidas.
+  expiresAt    DateTime? @map("expires_at")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@index([productId])
   @@index([storeId])
   @@index([featured])
+  @@index([source])
   @@map("deals")
 }

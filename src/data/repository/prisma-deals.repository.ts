@@ -1,4 +1,4 @@
-import type { Category, Deal } from "@/features/deals/types";
+import type { Category, Deal, DealSource } from "@/features/deals/types";
 import type { Prisma, Category as PrismaCategory } from "@/generated/prisma/client";
 import { getPrismaClient } from "@/server/prisma";
 
@@ -15,6 +15,17 @@ const DEAL_INCLUDE = { product: true, store: true } as const;
  */
 const MAX_DEALS_PER_LISTING = 60;
 
+/** Ofertas manuais com validade vencida somem das consultas públicas. */
+function notExpired() {
+  return { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] };
+}
+
+const KNOWN_SOURCES: readonly DealSource[] = ["awin", "manual", "demo"];
+
+function mapSource(source: string): DealSource {
+  return KNOWN_SOURCES.includes(source as DealSource) ? (source as DealSource) : "manual";
+}
+
 function mapCategory(row: PrismaCategory): Category {
   return {
     slug: row.slug,
@@ -27,6 +38,7 @@ function mapCategory(row: PrismaCategory): Category {
 function mapDeal(row: DealWithRelations): Deal {
   return {
     id: row.id,
+    source: mapSource(row.source),
     product: {
       id: row.product.id,
       title: row.product.title,
@@ -73,7 +85,7 @@ export class PrismaDealsRepository implements DealsRepository {
 
   async getDealsByCategory(slug: string): Promise<Deal[]> {
     const rows = await this.client.deal.findMany({
-      where: { product: { categorySlug: slug } },
+      where: { product: { categorySlug: slug }, AND: notExpired() },
       include: DEAL_INCLUDE,
       orderBy: { createdAt: "desc" },
       take: MAX_DEALS_PER_LISTING,
@@ -83,7 +95,7 @@ export class PrismaDealsRepository implements DealsRepository {
 
   async getFeaturedDeals(): Promise<Deal[]> {
     const rows = await this.client.deal.findMany({
-      where: { featured: true },
+      where: { featured: true, AND: notExpired() },
       include: DEAL_INCLUDE,
       orderBy: { createdAt: "desc" },
     });
@@ -94,7 +106,7 @@ export class PrismaDealsRepository implements DealsRepository {
     const needle = query.trim();
     if (!needle) return [];
     const rows = await this.client.deal.findMany({
-      where: { product: { title: { contains: needle, mode: "insensitive" } } },
+      where: { product: { title: { contains: needle, mode: "insensitive" } }, AND: notExpired() },
       include: DEAL_INCLUDE,
       take: MAX_DEALS_PER_LISTING,
     });

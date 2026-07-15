@@ -11,7 +11,6 @@ import { getPrismaClient } from "@/server/prisma";
  */
 
 const STORE_ID = "kabum";
-const DEMO_URL_PREFIX = "https://exemplo.ghtpromo.dev/";
 /** Quantos produtos (por preço desc.) marcar como destaque da home. */
 const FEATURED_COUNT = 6;
 /** Tamanho máximo da descrição persistida (o card trunca em 2 linhas). */
@@ -177,6 +176,7 @@ export async function importAwinFeed(
         discountPct: offer.discountPct,
         affiliateUrl: offer.affiliateUrl,
         featured: false,
+        source: "awin",
       },
       update: {
         price: offer.price,
@@ -195,13 +195,14 @@ export async function importAwinFeed(
     .map((offer) => offer.dealId);
   await prisma.deal.updateMany({ where: { id: { in: featuredIds } }, data: { featured: true } });
 
-  // Expiração: ofertas da loja que saíram do feed ou ficaram sem estoque são
-  // removidas (as demo ficam de fora — geridas por db:seed/--clean-demo).
+  // Expiração: ofertas do feed que saíram dele ou ficaram sem estoque são
+  // removidas. Só ofertas source="awin" — manuais (painel admin) e demo
+  // (seed) nunca são tocadas pelo cron, mesmo sendo da mesma loja.
   const staleDeals = await prisma.deal.findMany({
     where: {
       storeId: STORE_ID,
+      source: "awin",
       id: { notIn: offers.map((offer) => offer.dealId) },
-      affiliateUrl: { not: { startsWith: DEMO_URL_PREFIX } },
     },
     select: { id: true, productId: true },
   });
@@ -213,7 +214,7 @@ export async function importAwinFeed(
   let demoRemoved = 0;
   if (options.cleanDemo) {
     const demoDeals = await prisma.deal.findMany({
-      where: { affiliateUrl: { startsWith: DEMO_URL_PREFIX } },
+      where: { source: "demo" },
       select: { id: true, productId: true },
     });
     await prisma.deal.deleteMany({ where: { id: { in: demoDeals.map((d) => d.id) } } });

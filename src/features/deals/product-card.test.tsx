@@ -7,6 +7,7 @@ import type { Deal } from "./types";
 
 const deal: Deal = {
   id: "samsung-crystal-55",
+  source: "demo",
   product: {
     id: "produto-samsung-crystal-55",
     title: 'Smart TV Samsung 55" Crystal UHD 4K',

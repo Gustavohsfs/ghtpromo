@@ -55,6 +55,7 @@ async function main() {
       discountPct: deal.discountPct,
       affiliateUrl: deal.affiliateUrl,
       featured: deal.featured,
+      source: "demo",
     };
     await prisma.deal.upsert({
       where: { id: deal.id },

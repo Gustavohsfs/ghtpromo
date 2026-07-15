@@ -6,6 +6,7 @@ import { AFFILIATE_LINK_REL, buildAffiliateUrl } from "./affiliate";
 
 const deal: Deal = {
   id: "echo-dot-5",
+  source: "demo",
   product: {
     id: "produto-echo-dot-5",
     title: "Echo Dot 5ª geração",

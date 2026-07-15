@@ -192,6 +192,30 @@ Cron baixando o datafeed (URL autenticada da Awin em env) e tabela
 `price_history` para comparação honesta de preços ("menor dos últimos 30
 dias") já que a KaBuM não envia preço antigo.
 
+## Painel admin (2026-07-15 — SPEC §12)
+
+- **Auth própria**: `Admin` no Prisma (e-mail + `passwordHash` scrypt,
+  `src/server/password.ts`), sessão JWT HS256 (`jose`,
+  `src/server/admin-session.ts`) em cookie httpOnly de 7 dias
+  (`AUTH_SECRET`). Guarda dupla: `src/proxy.ts` (matcher `/admin/:path+`)
+  redireciona sem sessão; layout do painel e toda Server Action revalidam
+  (`requireSessionAdmin`). Rota oculta: `noindex` via metadata, fora do
+  robots.txt, sem links no site. `scripts/create-admin.ts` cria/reseta admin.
+- **Shell**: a sidebar/splash pública mora no grupo `(site)`; o layout raiz é
+  mínimo e o `/admin` tem layout próprio.
+- **Ofertas manuais**: `Deal.source` (`awin`|`manual`|`demo`) + `expiresAt`.
+  O cron só expira `source="awin"` — manuais nunca são tocadas; demo é do
+  seed/`--clean-demo`. Consultas públicas excluem vencidas (granularidade =
+  próxima revalidação). CRUD em `/admin/ofertas` (validação pura em
+  `src/server/deal-form.ts`, % de desconto derivado); mutações chamam
+  `revalidatePath("/", "layout")` — o site reflete na hora. Imagem de oferta
+  manual renderiza `unoptimized` (hotlink sem abrir o otimizador a domínios
+  arbitrários).
+- **Preview OG**: `POST /api/admin/og-preview` (autenticada) lê
+  og:title/description/image do link (parser puro `src/lib/og-parse.ts`) com
+  anti-SSRF básico (só http(s), hosts privados bloqueados por redirect,
+  timeout 8s, leitura limitada a 512KB).
+
 ## Testes (Fase 2)
 
 - Vitest + Testing Library (jsdom, `globals: true` para auto-cleanup).

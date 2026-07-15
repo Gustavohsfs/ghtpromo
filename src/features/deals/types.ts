@@ -36,9 +36,18 @@ export interface Product {
   isMock: boolean;
 }
 
+/**
+ * Origem da oferta: "awin" (datafeed, expirada pelo cron), "manual"
+ * (cadastrada no painel /admin) ou "demo" (dados de demonstração do seed).
+ */
+export type DealSource = "awin" | "manual" | "demo";
+
 /** Uma oferta: produto + loja + preços + link de afiliado. */
 export interface Deal {
   id: string;
+  /** Imagens de ofertas manuais são hotlink de domínio arbitrário — o card
+   *  as renderiza sem o otimizador do Next (unoptimized). */
+  source: DealSource;
   product: Product;
   store: Store;
   /** Preço atual em BRL. */

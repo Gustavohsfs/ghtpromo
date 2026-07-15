@@ -34,6 +34,9 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover"
+          // Oferta manual = imagem hotlink de domínio arbitrário; pular o
+          // otimizador evita liberar remotePatterns para a internet toda.
+          unoptimized={deal.source === "manual"}
         />
         {/* Selo da loja de destino (wordmark) — canto superior esquerdo */}
         <span

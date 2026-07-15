@@ -49,4 +49,10 @@ export const MOCK_STORES = {
     iconUrl: "/stores/netshoes.svg",
     isMock: true,
   },
+  mercadolivre: {
+    id: "mercadolivre",
+    name: "Mercado Livre",
+    iconUrl: "/stores/mercadolivre.svg",
+    isMock: true,
+  },
 } as const satisfies Record<string, Store>;
