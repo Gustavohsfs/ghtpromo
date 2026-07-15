@@ -137,14 +137,23 @@ central com o logo; o pulso usa `pathLength={100}` + `stroke-dasharray`/
 
 ### Links de afiliado reais (Awin/KaBuM — ativos desde 2026-07-14)
 
-Os links reais vivem **no banco** (`deals.affiliate_url`), não no código:
+Os links reais vivem **no banco** (`deals.affiliate_url`), não no código. O
+núcleo da importação está em `src/server/awin-import.ts` (normalização +
+upsert idempotente + expiração + estatísticas) e é usado por dois caminhos:
 
-1. Exporte o datafeed da Awin e salve em `data/private/awin-kabum.csv`
-   (gitignorado).
-2. `npm run db:import-awin -- --clean-demo` — importa produtos reais (nome,
-   preço, imagem do CDN da loja, `aw_deep_link`) mapeando categorias da loja
-   para os slugs da vitrine, marca os destaques e remove ofertas demo (links
-   `exemplo.ghtpromo.dev`). Idempotente: reimportar atualiza preços.
+- **Automático (desde 2026-07-15)**: Vercel Cron diário (06:00 BRT,
+  `vercel.json`) chama `GET /api/cron/import-awin` — protegida por
+  `CRON_SECRET` —, que baixa o feed completo da URL autenticada da Awin
+  (`AWIN_FEED_URL`, ~5,5k produtos, gzip), importa (~4k após o mapeamento de
+  categorias) e regenera as páginas SSG com `revalidatePath("/", "layout")`.
+  Sem CSV manual e sem novo deploy. Functions na região `gru1`, colada no
+  Neon `sa-east-1`. Categoria/busca renderizam no máximo 60 itens
+  (`MAX_DEALS_PER_LISTING`); paginação no backlog.
+- **Manual (fallback/dev)**: exporte o datafeed para
+  `data/private/awin-kabum.csv` (gitignorado) e rode
+  `npm run db:import-awin -- --clean-demo` — mesmo núcleo, mesma semântica;
+  `--clean-demo` remove ofertas demo (links `exemplo.ghtpromo.dev`).
+
 3. `buildAffiliateUrl()` segue sendo o ponto único — entrega o que o
    repositório fornecer. O importador também lê a descrição
    (`product_short_description`/`description`, sanitizada e truncada) e o

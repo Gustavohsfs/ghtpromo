@@ -8,6 +8,13 @@ type DealWithRelations = Prisma.DealGetPayload<{ include: { product: true; store
 
 const DEAL_INCLUDE = { product: true, store: true } as const;
 
+/**
+ * Máximo de ofertas por listagem (categoria/busca). O catálogo completo tem
+ * milhares de itens — a página mostra os mais recentes e a paginação está no
+ * backlog (PLAN.md). A busca continua cobrindo o catálogo inteiro no banco.
+ */
+const MAX_DEALS_PER_LISTING = 60;
+
 function mapCategory(row: PrismaCategory): Category {
   return {
     slug: row.slug,
@@ -69,6 +76,7 @@ export class PrismaDealsRepository implements DealsRepository {
       where: { product: { categorySlug: slug } },
       include: DEAL_INCLUDE,
       orderBy: { createdAt: "desc" },
+      take: MAX_DEALS_PER_LISTING,
     });
     return rows.map(mapDeal);
   }
@@ -88,6 +96,7 @@ export class PrismaDealsRepository implements DealsRepository {
     const rows = await this.client.deal.findMany({
       where: { product: { title: { contains: needle, mode: "insensitive" } } },
       include: DEAL_INCLUDE,
+      take: MAX_DEALS_PER_LISTING,
     });
     return rows.map(mapDeal);
   }

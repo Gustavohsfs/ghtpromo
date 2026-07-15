@@ -1,0 +1,9 @@
+{
+  "regions": ["gru1"],
+  "crons": [
+    {
+      "path": "/api/cron/import-awin",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

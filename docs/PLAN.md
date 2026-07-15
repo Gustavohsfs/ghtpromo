@@ -94,16 +94,17 @@
 
 ## Backlog (pós-fases)
 
-1. **Importação automática via Vercel Cron** _(planejado para 2026-07-15)_ —
-   job diário que baixa o datafeed direto da URL autenticada da Awin (chave em
-   env), roda a importação (com a expiração já implementada em 2026-07-14) e
-   dispara rebuild via deploy hook. Fecha o ciclo feed → banco → site sem o
-   passo manual do CSV.
+1. ~~**Importação automática via Vercel Cron**~~ — ✅ feito em 2026-07-15:
+   rota `/api/cron/import-awin` (diária, 06:00 BRT) baixa o feed da Awin,
+   importa com expiração e regenera as páginas via `revalidatePath` (spec em
+   `docs/superpowers/specs/2026-07-15-cron-import-awin-design.md`).
 2. **Ingestão multi-loja** — quando a 2ª fonte existir; plano registrado em
    `ARCHITECTURE.md` ("Ingestão multi-loja").
-3. **Histórico de preços** (`price_history`) — comparação honesta ("menor dos
+3. **Paginação da página de categoria** — o catálogo completo (~4k produtos)
+   é renderizado com limite de 60 por listagem; paginar quando fizer sentido.
+4. **Histórico de preços** (`price_history`) — comparação honesta ("menor dos
    últimos 30 dias") enquanto o feed da KaBuM não envia preço antigo.
-4. **Categorias vazias fora do sitemap/navegação** — geladeiras/tvs/iphones
+5. **Categorias vazias fora do sitemap/navegação** — geladeiras/tvs/iphones
    estão sem produtos reais até novas lojas chegarem (thin content).
 
 ---
