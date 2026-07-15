@@ -1,8 +1,14 @@
 import {
+  Armchair,
+  Baby,
+  Car,
+  Dumbbell,
   House,
   Laptop,
   Refrigerator,
+  Shirt,
   Smartphone,
+  Sparkles,
   Tag,
   Tv,
   Zap,
@@ -39,6 +45,12 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
   tvs: Tv,
   computadores: Laptop,
   iphones: Smartphone,
+  moda: Shirt,
+  casa: Armchair,
+  infantil: Baby,
+  beleza: Sparkles,
+  automotivo: Car,
+  fitness: Dumbbell,
 };
 
 export const DEFAULT_NAV_ICON: LucideIcon = Tag;

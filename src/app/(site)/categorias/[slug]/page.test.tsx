@@ -26,6 +26,7 @@ describe("CategoryPage", () => {
   it("gera params estáticos para todas as categorias", async () => {
     const params = await generateStaticParams();
     expect(params).toContainEqual({ slug: "iphones" });
-    expect(params).toHaveLength(5);
+    expect(params).toContainEqual({ slug: "fitness" });
+    expect(params).toHaveLength(11);
   });
 });

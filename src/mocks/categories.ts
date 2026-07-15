@@ -37,4 +37,40 @@ export const MOCK_CATEGORIES: readonly Category[] = [
     description: "iPhones novos com nota fiscal e garantia, pelo menor preço do dia.",
     isMock: true,
   },
+  {
+    slug: "moda",
+    name: "Moda",
+    description: "Roupas, calçados, bermudas e saias das marcas que você gosta em promoção.",
+    isMock: true,
+  },
+  {
+    slug: "casa",
+    name: "Casa",
+    description: "Ferramentas, cama, móveis e utilidades para a casa com desconto real.",
+    isMock: true,
+  },
+  {
+    slug: "infantil",
+    name: "Infantil",
+    description: "Fraldas, brinquedos e tudo para bebês e crianças pelo menor preço.",
+    isMock: true,
+  },
+  {
+    slug: "beleza",
+    name: "Beleza",
+    description: "Perfumes, maquiagem, shampoos e cuidados pessoais em oferta.",
+    isMock: true,
+  },
+  {
+    slug: "automotivo",
+    name: "Automotivo",
+    description: "Pneus, som automotivo e acessórios para o seu carro em promoção.",
+    isMock: true,
+  },
+  {
+    slug: "fitness",
+    name: "Fitness",
+    description: "Esporte, lazer e suplementos para treinar pagando menos.",
+    isMock: true,
+  },
 ];

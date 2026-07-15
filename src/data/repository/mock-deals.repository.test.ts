@@ -5,7 +5,7 @@ import { MockDealsRepository } from "./mock-deals.repository";
 const repository = new MockDealsRepository();
 
 describe("MockDealsRepository", () => {
-  it("retorna as 5 categorias da vitrine", async () => {
+  it("retorna as 11 categorias da vitrine", async () => {
     const categories = await repository.getCategories();
     expect(categories.map((c) => c.slug)).toEqual([
       "eletronicos",
@@ -13,6 +13,12 @@ describe("MockDealsRepository", () => {
       "tvs",
       "computadores",
       "iphones",
+      "moda",
+      "casa",
+      "infantil",
+      "beleza",
+      "automotivo",
+      "fitness",
     ]);
   });
 

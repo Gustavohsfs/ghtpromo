@@ -1,8 +1,9 @@
 # GHT Promoções
 
 > Vitrine pública de promoções e ofertas de lojas oficiais brasileiras (Amazon,
-> Magazine Luiza, KaBuM!, Casas Bahia, Fast Shop), organizada por categorias.
-> Conteúdo em português do Brasil. Sem login — todo o catálogo é público.
+> Mercado Livre, Magazine Luiza, KaBuM!, Casas Bahia, Fast Shop, Shopee,
+> Netshoes), organizada por categorias. Conteúdo em português do Brasil.
+> Sem login — todo o catálogo é público.
 
 Site: https://ghtpromo.com.br
 Sitemap: https://ghtpromo.com.br/sitemap.xml
@@ -17,6 +18,12 @@ de destino. Os links de oferta levam ao site oficial da loja parceira.
 - [TVs](https://ghtpromo.com.br/categorias/tvs): smart TVs 4K, QLED e OLED
 - [Computadores](https://ghtpromo.com.br/categorias/computadores): notebooks, desktops e minis
 - [iPhones](https://ghtpromo.com.br/categorias/iphones): iPhones novos com nota fiscal e garantia
+- [Moda](https://ghtpromo.com.br/categorias/moda): roupas, calçados, bermudas e saias
+- [Casa](https://ghtpromo.com.br/categorias/casa): ferramentas, cama, móveis e utilidades
+- [Infantil](https://ghtpromo.com.br/categorias/infantil): fraldas, brinquedos e itens para crianças
+- [Beleza](https://ghtpromo.com.br/categorias/beleza): perfumes, maquiagem e cuidados pessoais
+- [Automotivo](https://ghtpromo.com.br/categorias/automotivo): pneus, som e acessórios para carro
+- [Fitness](https://ghtpromo.com.br/categorias/fitness): esporte, lazer e suplementos
 
 ## Observações
 
