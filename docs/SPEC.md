@@ -11,7 +11,7 @@ Objetivos com peso igual:
 1. **Produto** — site rápido, bonito e encontrável (Google + IAs), pronto para receber links de afiliado reais depois.
 2. **Portfólio** — o repositório é vitrine no GitHub: arquitetura, legibilidade, componentização e testes contam tanto quanto as features.
 
-**Fora de escopo (por enquanto):** autenticação, banco conectado, links de afiliado reais, painel admin, pagamentos. Os _encaixes_ ficam prontos (repositório, `buildAffiliateUrl`, `data/private/`), mas nada disso é implementado.
+**Fora de escopo (por enquanto):** autenticação de usuários finais, pagamentos, painel de métricas. (Banco conectado, links de afiliado reais e painel admin — antes fora de escopo — entraram em 2026-07: ver §12 e `docs/superpowers/specs/`.)
 
 ## 2. Decisões fechadas
 
@@ -224,3 +224,13 @@ Anatomia do card: imagem · título · **preço atual em destaque** · preço an
 | `ght-seo`           | Checklist SEO (metadata, canonical, sitemap/robots, JSON-LD, llms.txt, crawlers IA)         | Ao criar rotas/páginas      |
 
 Convenções sempre-ativas ficam no `CLAUDE.md` (raiz), incluindo a política de autonomia (brief §1).
+
+## 12. Painel admin (adicionado em 2026-07-15)
+
+Rota **oculta** `/admin` (sem link no site, `noindex`, fora do robots.txt) com
+autenticação própria sobre o Prisma: modelo `Admin` (e-mail + senha scrypt),
+sessão JWT (`jose`) em cookie `httpOnly`, guarda dupla (`proxy.ts` + layout do
+painel). Menu: Ofertas (CRUD manual com link afiliado, loja, validade, preview
+OG de imagem) · Admins (cadastro) · Trocar senha · Sair. Sem auth de usuários
+finais. Design completo em
+`docs/superpowers/specs/2026-07-15-admin-panel-design.md`.
