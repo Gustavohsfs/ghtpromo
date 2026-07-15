@@ -12,6 +12,13 @@ function normalize(text: string): string {
     .replace(/\p{Diacritic}/gu, "");
 }
 
+/** Curadas antes do feed (espelha o `source desc` do Prisma). */
+const SOURCE_PRIORITY: Record<string, number> = { manual: 2, demo: 1, awin: 0 };
+
+function byCuratedFirst(a: Deal, b: Deal): number {
+  return (SOURCE_PRIORITY[b.source] ?? 0) - (SOURCE_PRIORITY[a.source] ?? 0);
+}
+
 /** Implementação sobre os dados fictícios de src/mocks/ (DATA_SOURCE=mock). */
 export class MockDealsRepository implements DealsRepository {
   async getCategories(): Promise<Category[]> {
@@ -27,7 +34,7 @@ export class MockDealsRepository implements DealsRepository {
   }
 
   async getDealsByCategory(slug: string): Promise<Deal[]> {
-    return MOCK_DEALS.filter((deal) => deal.product.categorySlug === slug);
+    return MOCK_DEALS.filter((deal) => deal.product.categorySlug === slug).sort(byCuratedFirst);
   }
 
   async getFeaturedDeals(): Promise<Deal[]> {
@@ -47,7 +54,8 @@ export class MockDealsRepository implements DealsRepository {
     });
 
     if (query.sort === "menor-preco") deals = [...deals].sort((a, b) => a.price - b.price);
-    if (query.sort === "maior-preco") deals = [...deals].sort((a, b) => b.price - a.price);
+    else if (query.sort === "maior-preco") deals = [...deals].sort((a, b) => b.price - a.price);
+    else deals = [...deals].sort(byCuratedFirst);
 
     const page = Math.max(1, query.page ?? 1);
     const start = (page - 1) * DEALS_PAGE_SIZE;

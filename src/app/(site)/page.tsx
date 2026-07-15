@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { getDealsRepository } from "@/data/repository";
 import { DealsSection } from "@/features/deals/deals-section";
+import { diversifyDeals } from "@/features/deals/diversity";
 import { ProductCard } from "@/features/deals/product-card";
 
 export const metadata: Metadata = {
@@ -10,18 +11,26 @@ export const metadata: Metadata = {
 
 /** Quantas ofertas cada seção da home mostra (o "ver todos" leva ao resto). */
 const DEALS_PER_SECTION = 8;
+/** Quantos cards na vitrine de destaques. */
+const FEATURED_SLOTS = 5;
 
-/** Home: destaques do dia + uma seção por categoria. */
+/** Home: destaques do dia + uma seção por categoria, com variedade de lojas. */
 export default async function Home() {
   const repository = getDealsRepository();
-  const [categories, featured] = await Promise.all([
+  const [categories, featured, recent] = await Promise.all([
     repository.getCategories(),
     repository.getFeaturedDeals(),
+    // Curadas recentes de todas as categorias — mescladas nos destaques para
+    // a vitrine não ficar só com o feed da KaBuM (ver diversifyDeals).
+    repository.listDeals({ sort: "recentes", page: 1 }),
   ]);
+  const curatedRecent = recent.deals.filter((deal) => deal.source !== "awin");
+  const highlights = diversifyDeals([...curatedRecent, ...featured], FEATURED_SLOTS);
+
   const sections = await Promise.all(
     categories.map(async (category) => ({
       category,
-      deals: (await repository.getDealsByCategory(category.slug)).slice(0, DEALS_PER_SECTION),
+      deals: diversifyDeals(await repository.getDealsByCategory(category.slug), DEALS_PER_SECTION),
     })),
   );
 
@@ -37,13 +46,13 @@ export default async function Home() {
           </p>
         </div>
 
-        {featured.length > 0 && (
+        {highlights.length > 0 && (
           <>
             <h2 id="destaques" className="sr-only">
               Destaques de hoje
             </h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
-              {featured.slice(0, 5).map((deal) => (
+              {highlights.map((deal) => (
                 <ProductCard key={deal.id} deal={deal} />
               ))}
             </div>

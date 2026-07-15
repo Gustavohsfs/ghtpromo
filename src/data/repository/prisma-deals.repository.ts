@@ -88,7 +88,8 @@ export class PrismaDealsRepository implements DealsRepository {
     const rows = await this.client.deal.findMany({
       where: { product: { categorySlug: slug }, AND: notExpired() },
       include: DEAL_INCLUDE,
-      orderBy: { createdAt: "desc" },
+      // source desc = manual > demo > awin: curadas antes do feed automático.
+      orderBy: [{ source: "desc" }, { createdAt: "desc" }],
       take: MAX_DEALS_PER_LISTING,
     });
     return rows.map(mapDeal);
@@ -125,12 +126,15 @@ export class PrismaDealsRepository implements DealsRepository {
         query.maxPrice != null ? { price: { lt: query.maxPrice } } : {},
       ],
     };
-    const orderBy: Prisma.DealOrderByWithRelationInput =
+    // "recentes" (default) prioriza curadas: source desc = manual > demo >
+    // awin — outras lojas aparecem antes do feed da KaBuM (variedade), com o
+    // catálogo completo preservado na paginação.
+    const orderBy: Prisma.DealOrderByWithRelationInput[] =
       query.sort === "menor-preco"
-        ? { price: "asc" }
+        ? [{ price: "asc" }]
         : query.sort === "maior-preco"
-          ? { price: "desc" }
-          : { createdAt: "desc" };
+          ? [{ price: "desc" }]
+          : [{ source: "desc" }, { createdAt: "desc" }];
 
     const page = Math.max(1, query.page ?? 1);
     const [total, rows] = await Promise.all([
