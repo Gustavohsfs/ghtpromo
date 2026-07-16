@@ -132,9 +132,9 @@ export default async function ProductPage(props: PageProps<"/produto/[slug]">) {
           </div>
 
           <p className="text-muted-foreground border-border border-t pt-4 text-xs leading-relaxed">
-            O GHT Promoções divulga ofertas de lojas oficiais e pode receber comissão pelas compras
-            — sem custo extra para você. Preço e estoque podem divergir por atualizações da loja
-            após a publicação; confirme sempre na página final.
+            O GHT Promoções divulga ofertas de lojas oficiais. Preço e estoque podem divergir por
+            atualizações da loja após a publicação; confirme sempre na página final antes de
+            comprar.
           </p>
         </div>
       </div>
