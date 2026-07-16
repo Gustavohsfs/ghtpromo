@@ -15,6 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/cupons"),
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
     ...categories.map((category) => ({
       url: absoluteUrl(`/categorias/${category.slug}`),
       lastModified,

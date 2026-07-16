@@ -45,6 +45,8 @@ export default async function AdminEditarOfertaPage({
           affiliateUrl: deal.affiliateUrl,
           imageUrl: deal.product.imageUrl,
           expiresAt: deal.expiresAt?.toISOString().slice(0, 10),
+          paymentInfo: deal.paymentInfo ?? "",
+          couponCode: deal.couponCode ?? "",
         }}
       />
     </section>

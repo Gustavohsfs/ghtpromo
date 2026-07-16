@@ -1,3 +1,4 @@
+import type { Coupon } from "@/features/coupons/types";
 import { DEALS_PAGE_SIZE } from "@/features/deals/listing";
 import type { Category, Deal, DealSource, Store } from "@/features/deals/types";
 import type { Prisma, Category as PrismaCategory } from "@/generated/prisma/client";
@@ -59,6 +60,9 @@ function mapDeal(row: DealWithRelations): Deal {
     discountPct: row.discountPct,
     affiliateUrl: row.affiliateUrl,
     featured: row.featured,
+    createdAt: row.createdAt,
+    paymentInfo: row.paymentInfo,
+    couponCode: row.couponCode,
     isMock: false,
   };
 }
@@ -82,6 +86,31 @@ export class PrismaDealsRepository implements DealsRepository {
   async getCategoryBySlug(slug: string): Promise<Category | null> {
     const row = await this.client.category.findUnique({ where: { slug } });
     return row ? mapCategory(row) : null;
+  }
+
+  async getActiveCoupons(): Promise<Coupon[]> {
+    const rows = await this.client.coupon.findMany({
+      where: { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
+      include: { store: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return rows.map((row) => ({
+      id: row.id,
+      store: { id: row.store.id, name: row.store.name, iconUrl: row.store.iconUrl, isMock: false },
+      code: row.code,
+      description: row.description,
+      affiliateUrl: row.affiliateUrl,
+      expiresAt: row.expiresAt,
+      isMock: false,
+    }));
+  }
+
+  async getDealById(id: string): Promise<Deal | null> {
+    const row = await this.client.deal.findFirst({
+      where: { id, AND: notExpired() },
+      include: DEAL_INCLUDE,
+    });
+    return row ? mapDeal(row) : null;
   }
 
   async getDealsByCategory(slug: string): Promise<Deal[]> {

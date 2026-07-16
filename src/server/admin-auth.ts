@@ -11,7 +11,7 @@ export async function getSessionAdmin() {
   if (!session) return null;
   return getPrismaClient().admin.findUnique({
     where: { id: session.adminId },
-    select: { id: true, email: true },
+    select: { id: true, email: true, role: true },
   });
 }
 
@@ -22,5 +22,15 @@ export async function getSessionAdmin() {
 export async function requireSessionAdmin() {
   const admin = await getSessionAdmin();
   if (!admin) redirect("/admin");
+  return admin;
+}
+
+/**
+ * Área exclusiva do owner (gestão de admins): quem não é owner volta para a
+ * home do painel — a rota nem aparece no menu para os demais.
+ */
+export async function requireOwnerAdmin() {
+  const admin = await requireSessionAdmin();
+  if (admin.role !== "owner") redirect("/admin/ofertas");
   return admin;
 }

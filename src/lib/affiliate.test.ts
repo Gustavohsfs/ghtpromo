@@ -21,6 +21,9 @@ const deal: Deal = {
   discountPct: 34,
   affiliateUrl: "https://exemplo.ghtpromo.dev/redir/echo-dot-5",
   featured: true,
+  createdAt: new Date("2026-07-01T12:00:00-03:00"),
+  paymentInfo: null,
+  couponCode: null,
   isMock: true,
 };
 

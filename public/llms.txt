@@ -25,6 +25,10 @@ de destino. Os links de oferta levam ao site oficial da loja parceira.
 - [Automotivo](https://ghtpromo.com.br/categorias/automotivo): pneus, som e acessórios para carro
 - [Fitness](https://ghtpromo.com.br/categorias/fitness): esporte, lazer e suplementos
 
+## Cupons
+
+- [Cupons de desconto](https://ghtpromo.com.br/cupons): códigos válidos das lojas parceiras, copiáveis em um toque
+
 ## Observações
 
 - Preços mudam com frequência; confirme sempre na loja de destino.

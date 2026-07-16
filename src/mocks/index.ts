@@ -5,5 +5,6 @@
  * ==========================================================================*/
 
 export { MOCK_CATEGORIES } from "./categories";
+export { MOCK_COUPONS } from "./coupons";
 export { MOCK_DEALS } from "./deals";
 export { MOCK_STORES } from "./stores";

@@ -8,7 +8,9 @@ import { logoutAction } from "../actions";
 const MENU = [
   { href: "/admin/ofertas", label: "Ofertas" },
   { href: "/admin/ofertas/nova", label: "Nova oferta" },
-  { href: "/admin/admins", label: "Admins" },
+  { href: "/admin/cupons", label: "Cupons" },
+  { href: "/admin/reports", label: "Reports" },
+  { href: "/admin/admins", label: "Admins", ownerOnly: true },
   { href: "/admin/senha", label: "Trocar senha" },
 ] as const;
 
@@ -28,7 +30,7 @@ export default async function AdminPanelLayout({
           ght<span className="text-brand">promo</span> · admin
         </p>
         <nav aria-label="Menu do admin" className="flex flex-wrap items-center gap-1">
-          {MENU.map((item) => (
+          {MENU.filter((item) => !("ownerOnly" in item) || admin.role === "owner").map((item) => (
             <Link
               key={item.href}
               href={item.href}

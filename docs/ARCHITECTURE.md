@@ -216,6 +216,33 @@ dias") já que a KaBuM não envia preço antigo.
   anti-SSRF básico (só http(s), hosts privados bloqueados por redirect,
   timeout 8s, leitura limitada a 512KB).
 
+## Página de produto, reports e roles (2026-07-16)
+
+- **`/produto/[slug]`** (`slug--dealId`, helpers puros em
+  `src/features/deals/product-path.ts`): detalhe dinâmico com imagem
+  (contain sobre fundo branco — imagens de qualquer proporção sem corte,
+  mesmo enquadramento dos cards), preço/riscado/%, forma de pagamento e
+  cupom (`Deal.paymentInfo`/`couponCode`, preenchíveis no admin),
+  compartilhar (copiar link · WhatsApp `wa.me`), reportar (modal → `Report`
+  no banco, sem login, motivos fechados) e disclaimer de divergência de
+  preço/estoque. Cards linkam imagem/título para o detalhe; JSON-LD
+  `Product.url` aponta para ele.
+- **`/admin/reports`**: fila com status aberto/resolvido, reabrir e apagar.
+- **Roles**: `Admin.role` (`owner`/`admin`). `/admin/admins` é exclusiva do
+  owner (menu esconde, página e actions revalidam): cadastrar, redefinir
+  senha de qualquer admin e apagar (menos a si próprio).
+- **Favicon**: `src/app/icon.svg` + `favicon.ico`/`apple-icon.png` gerados
+  do quadrado do `ghtpromo-logo-full-dark` (tag verde em fundo escuro).
+
+## Cupons (2026-07-16)
+
+- Model `Coupon` (loja, código, benefício, link, validade opcional). Aba
+  pública `/cupons` (estática; revalidada pelas mutações do admin e pelo
+  cron): cards com código copiável em um toque e link "usar na loja" com rel
+  de afiliado; vencidos somem via `getActiveCoupons()` (repositório, mock +
+  Prisma). CRUD em `/admin/cupons` (validação pura `coupon-form.ts`).
+  Entrada "Cupons" na sidebar, sitemap e llms.txt.
+
 ## Filtros e paginação (2026-07-15)
 
 - Estado na URL (`?lojas=a,b&preco=100-500&ordem=menor-preco&page=2`) —

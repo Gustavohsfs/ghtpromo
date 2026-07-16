@@ -23,6 +23,9 @@ function deal(storeId: string, source: DealSource): Deal {
     discountPct: null,
     affiliateUrl: "https://exemplo.ghtpromo.dev/x",
     featured: false,
+    createdAt: new Date("2026-07-01T12:00:00-03:00"),
+    paymentInfo: null,
+    couponCode: null,
     isMock: true,
   };
 }

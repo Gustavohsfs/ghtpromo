@@ -55,6 +55,20 @@ describe("parseDealForm", () => {
     expect(result.data.expiresAt).toBeNull();
   });
 
+  it("forma de pagamento e cupom são opcionais e vêm aparados", () => {
+    const vazio = parseDealForm(makeForm());
+    if (!vazio.ok) throw new Error(vazio.error);
+    expect(vazio.data.paymentInfo).toBeNull();
+    expect(vazio.data.couponCode).toBeNull();
+
+    const cheio = parseDealForm(
+      makeForm({ paymentInfo: "  à vista no Pix ", couponCode: " GHT10 " }),
+    );
+    if (!cheio.ok) throw new Error(cheio.error);
+    expect(cheio.data.paymentInfo).toBe("à vista no Pix");
+    expect(cheio.data.couponCode).toBe("GHT10");
+  });
+
   it("rejeita preço antigo menor ou igual ao atual", () => {
     const result = parseDealForm(makeForm({ oldPrice: "100,00", price: "200,00" }));
     expect(result.ok).toBe(false);
