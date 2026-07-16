@@ -4,7 +4,7 @@ import { useActionState } from "react";
 
 import type { AdminFormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
-import { InputField, SelectField } from "@/components/ui/field";
+import { InputField, SelectField, TextareaField } from "@/components/ui/field";
 
 export interface CouponFormProps {
   action: (state: AdminFormState, formData: FormData) => Promise<AdminFormState>;
@@ -16,6 +16,7 @@ export interface CouponFormProps {
     code?: string;
     description?: string;
     affiliateUrl?: string;
+    usageInfo?: string;
     /** YYYY-MM-DD. */
     expiresAt?: string;
   };
@@ -66,6 +67,14 @@ export function CouponForm({ action, submitLabel, stores, defaults }: CouponForm
         defaultValue={defaults?.affiliateUrl}
         hint="Link de afiliado quando houver."
         required
+      />
+
+      <TextareaField
+        label="Como usar"
+        name="usageInfo"
+        placeholder="Cole o código no campo de cupom do carrinho antes de fechar o pedido. Válido para…"
+        defaultValue={defaults?.usageInfo}
+        hint="Opcional — aparece no modal quando o usuário toca no cupom."
       />
 
       <InputField

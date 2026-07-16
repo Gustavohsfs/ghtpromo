@@ -74,6 +74,8 @@ model Coupon {
   description  String
   /// Link (afiliado quando houver) para usar o cupom na loja.
   affiliateUrl String    @map("affiliate_url")
+  /// Como e para que o cupom serve (modal "como usar" no card).
+  usageInfo    String?   @map("usage_info")
   /// Nulo = sem validade. Vencidos somem da vitrine.
   expiresAt    DateTime? @map("expires_at")
   createdAt    DateTime  @default(now()) @map("created_at")

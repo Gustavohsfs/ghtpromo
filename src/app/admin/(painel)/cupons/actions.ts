@@ -20,6 +20,7 @@ export async function createCouponAction(
 
   await getPrismaClient().coupon.create({ data: parsed.data });
   revalidatePath("/cupons");
+  revalidatePath("/cupons/[loja]", "page");
   redirect("/admin/cupons");
 }
 
@@ -38,6 +39,7 @@ export async function updateCouponAction(
   }
   await prisma.coupon.update({ where: { id: couponId }, data: parsed.data });
   revalidatePath("/cupons");
+  revalidatePath("/cupons/[loja]", "page");
   redirect("/admin/cupons");
 }
 
@@ -47,5 +49,6 @@ export async function deleteCouponAction(couponId: string): Promise<void> {
     .coupon.delete({ where: { id: couponId } })
     .catch(() => undefined);
   revalidatePath("/cupons");
+  revalidatePath("/cupons/[loja]", "page");
   revalidatePath("/admin/cupons");
 }

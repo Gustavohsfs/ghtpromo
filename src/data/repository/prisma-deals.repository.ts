@@ -100,6 +100,7 @@ export class PrismaDealsRepository implements DealsRepository {
       code: row.code,
       description: row.description,
       affiliateUrl: row.affiliateUrl,
+      usageInfo: row.usageInfo,
       expiresAt: row.expiresAt,
       isMock: false,
     }));

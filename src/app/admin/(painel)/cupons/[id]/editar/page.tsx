@@ -34,6 +34,7 @@ export default async function AdminEditarCupomPage({
           code: coupon.code,
           description: coupon.description,
           affiliateUrl: coupon.affiliateUrl,
+          usageInfo: coupon.usageInfo ?? "",
           expiresAt: coupon.expiresAt?.toISOString().slice(0, 10),
         }}
       />

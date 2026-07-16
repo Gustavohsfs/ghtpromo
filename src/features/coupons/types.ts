@@ -10,6 +10,8 @@ export interface Coupon {
   description: string;
   /** Link (afiliado quando houver) para usar o cupom na loja. */
   affiliateUrl: string;
+  /** Como e para que o cupom serve (modal "como usar"); null omite. */
+  usageInfo: string | null;
   /** Nulo = sem validade. */
   expiresAt: Date | null;
   isMock: boolean;

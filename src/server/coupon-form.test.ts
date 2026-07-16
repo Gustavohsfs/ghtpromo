@@ -34,6 +34,16 @@ describe("parseCouponForm", () => {
     expect(result.data.expiresAt).toBeNull();
   });
 
+  it("descrição de uso é opcional e vem aparada", () => {
+    const vazio = parseCouponForm(makeForm());
+    if (!vazio.ok) throw new Error(vazio.error);
+    expect(vazio.data.usageInfo).toBeNull();
+
+    const cheio = parseCouponForm(makeForm({ usageInfo: "  Cole no checkout.  " }));
+    if (!cheio.ok) throw new Error(cheio.error);
+    expect(cheio.data.usageInfo).toBe("Cole no checkout.");
+  });
+
   it.each([
     ["código vazio", { code: "  " }],
     ["descrição vazia", { description: "" }],

@@ -5,6 +5,8 @@ export interface ParsedCouponForm {
   code: string;
   description: string;
   affiliateUrl: string;
+  /** Como e para que o cupom serve (modal "como usar"). */
+  usageInfo: string | null;
   expiresAt: Date | null;
 }
 
@@ -49,5 +51,15 @@ export function parseCouponForm(formData: FormData): CouponFormResult {
     if (Number.isNaN(expiresAt.getTime())) return { ok: false, error: "Validade inválida." };
   }
 
-  return { ok: true, data: { storeId, code, description, affiliateUrl, expiresAt } };
+  return {
+    ok: true,
+    data: {
+      storeId,
+      code,
+      description,
+      affiliateUrl,
+      usageInfo: text("usageInfo") || null,
+      expiresAt,
+    },
+  };
 }
