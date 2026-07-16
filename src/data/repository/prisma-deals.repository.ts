@@ -59,6 +59,9 @@ function mapDeal(row: DealWithRelations): Deal {
     discountPct: row.discountPct,
     affiliateUrl: row.affiliateUrl,
     featured: row.featured,
+    createdAt: row.createdAt,
+    paymentInfo: row.paymentInfo,
+    couponCode: row.couponCode,
     isMock: false,
   };
 }
@@ -82,6 +85,14 @@ export class PrismaDealsRepository implements DealsRepository {
   async getCategoryBySlug(slug: string): Promise<Category | null> {
     const row = await this.client.category.findUnique({ where: { slug } });
     return row ? mapCategory(row) : null;
+  }
+
+  async getDealById(id: string): Promise<Deal | null> {
+    const row = await this.client.deal.findFirst({
+      where: { id, AND: notExpired() },
+      include: DEAL_INCLUDE,
+    });
+    return row ? mapDeal(row) : null;
   }
 
   async getDealsByCategory(slug: string): Promise<Deal[]> {

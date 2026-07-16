@@ -23,6 +23,8 @@ export interface DealFormDefaults {
   imageUrl?: string;
   /** YYYY-MM-DD (formato do <input type="date">). */
   expiresAt?: string;
+  paymentInfo?: string;
+  couponCode?: string;
 }
 
 export interface DealFormProps {
@@ -196,6 +198,23 @@ export function DealForm({ action, submitLabel, stores, categories, defaults }: 
         </div>
       </div>
 
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <InputField
+          label="Forma de pagamento"
+          name="paymentInfo"
+          placeholder="à vista no Pix"
+          hint="Opcional — aparece na página do produto."
+          defaultValue={defaults?.paymentInfo}
+        />
+        <InputField
+          label="Cupom"
+          name="couponCode"
+          placeholder="GHT10"
+          hint="Opcional — código exibido em destaque."
+          defaultValue={defaults?.couponCode}
+        />
+      </div>
+
       <InputField
         label="Validade da oferta"
         name="expiresAt"
@@ -219,7 +238,7 @@ export function DealForm({ action, submitLabel, stores, categories, defaults }: 
         <img
           src={imageUrl}
           alt="Preview da imagem do produto"
-          className="border-border h-40 w-40 rounded-lg border object-cover"
+          className="border-border h-40 w-40 rounded-lg border bg-white object-contain p-1"
         />
       )}
 

@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { formatBRL } from "@/lib/format";
 
 import { DealLinkButton } from "./deal-link-button";
+import { buildProductPath } from "./product-path";
 import type { Deal } from "./types";
 
 export interface ProductCardProps {
@@ -24,16 +26,25 @@ export interface ProductCardProps {
  */
 export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps) {
   const { product, store } = deal;
+  const productPath = buildProductPath({ id: deal.id, title: product.title });
 
   return (
     <Card glowOnHover className="flex flex-col overflow-hidden">
-      <div className="border-border relative aspect-square border-b">
+      {/* tabIndex -1: o link do título é a parada de teclado; a imagem
+          continua acessível (alt) e clicável. */}
+      <Link
+        href={productPath}
+        tabIndex={-1}
+        className="border-border relative block aspect-square border-b bg-white p-2"
+      >
         <Image
           src={product.imageUrl}
           alt={product.title}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover"
+          // contain: fotos de loja têm fundo branco; nunca corta detalhes
+          // (imagens manuais vêm em qualquer proporção).
+          className="object-contain p-2"
           // Oferta manual = imagem hotlink de domínio arbitrário; pular o
           // otimizador evita liberar remotePatterns para a internet toda.
           unoptimized={deal.source === "manual"}
@@ -46,11 +57,13 @@ export function ProductCard({ deal, titleAs: TitleTag = "h3" }: ProductCardProps
           <Image src={store.iconUrl} alt="" width={80} height={24} className="h-6 w-20" />
           <span className="sr-only">Oferta na {store.name}</span>
         </span>
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <TitleTag className="line-clamp-2 min-h-10 text-sm font-medium" title={product.title}>
-          {product.title}
+          <Link href={productPath} className="hover:text-brand transition-colors">
+            {product.title}
+          </Link>
         </TitleTag>
 
         {product.description !== null && (

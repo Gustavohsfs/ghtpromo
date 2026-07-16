@@ -34,6 +34,8 @@ export interface DealsRepository {
   getCategoryBySlug(slug: string): Promise<Category | null>;
   /** Lojas parceiras (para filtros e formulários). */
   getStores(): Promise<Store[]>;
+  /** Oferta por id para a página de detalhe; null se não existir ou vencida. */
+  getDealById(id: string): Promise<Deal | null>;
   /** Ofertas recentes de uma categoria (home) — sem filtros/paginação. */
   getDealsByCategory(slug: string): Promise<Deal[]>;
   getFeaturedDeals(): Promise<Deal[]>;
