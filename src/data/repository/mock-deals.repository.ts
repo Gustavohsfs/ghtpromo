@@ -33,6 +33,10 @@ export class MockDealsRepository implements DealsRepository {
     return Object.values(MOCK_STORES);
   }
 
+  async getDealById(id: string): Promise<Deal | null> {
+    return MOCK_DEALS.find((deal) => deal.id === id) ?? null;
+  }
+
   async getDealsByCategory(slug: string): Promise<Deal[]> {
     return MOCK_DEALS.filter((deal) => deal.product.categorySlug === slug).sort(byCuratedFirst);
   }

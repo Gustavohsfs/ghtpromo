@@ -68,5 +68,11 @@ export interface Deal {
   affiliateUrl: string;
   /** Destaque na home (seção de destaques). */
   featured: boolean;
+  /** Quando a oferta entrou no ar ("Postado em" na página de detalhe). */
+  createdAt: Date;
+  /** Forma de pagamento anunciada (ex.: "à vista no Pix"); null omite. */
+  paymentInfo: string | null;
+  /** Código de cupom da oferta; null omite o bloco no detalhe. */
+  couponCode: string | null;
   isMock: boolean;
 }

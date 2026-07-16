@@ -20,10 +20,28 @@ model Admin {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String   @map("password_hash")
+  /// "owner" gerencia os demais admins (tela /admin/admins); default "admin".
+  role         String   @default("admin")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("admins")
+}
+
+/// Denúncia de oferta enviada pelo público na página de detalhe do produto.
+model Report {
+  id        String   @id @default(cuid())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  dealId    String   @map("deal_id")
+  /// preco-incorreto | oferta-inexistente | problema-produto | outro
+  reason    String
+  details   String?
+  /// aberto | resolvido
+  status    String   @default("aberto")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("reports")
 }
 
 model Category {
@@ -78,6 +96,11 @@ model Deal {
   /// Validade de oferta manual; nula = sem validade. Consultas públicas
   /// excluem ofertas vencidas.
   expiresAt    DateTime? @map("expires_at")
+  /// Forma de pagamento anunciada (ex.: "à vista no Pix"); só ofertas manuais.
+  paymentInfo  String?   @map("payment_info")
+  /// Código de cupom da oferta, quando houver; só ofertas manuais.
+  couponCode   String?   @map("coupon_code")
+  reports      Report[]
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

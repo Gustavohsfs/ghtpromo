@@ -106,6 +106,9 @@
    últimos 30 dias") enquanto o feed da KaBuM não envia preço antigo.
 5. **Categorias vazias fora do sitemap/navegação** — geladeiras/tvs/iphones
    estão sem produtos reais até novas lojas chegarem (thin content).
+6. **Sitemap de produtos** — as páginas `/produto/[slug]` (2026-07-16) são
+   descobertas pelos links dos cards; incluí-las no sitemap (~4k URLs) quando
+   valer o custo de geração.
 
 ---
 

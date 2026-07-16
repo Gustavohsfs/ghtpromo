@@ -45,6 +45,8 @@ export async function createDealAction(
       discountPct: data.discountPct,
       affiliateUrl: data.affiliateUrl,
       expiresAt: data.expiresAt,
+      paymentInfo: data.paymentInfo,
+      couponCode: data.couponCode,
       source: "manual",
     },
   });
@@ -87,6 +89,8 @@ export async function updateDealAction(
       discountPct: data.discountPct,
       affiliateUrl: data.affiliateUrl,
       expiresAt: data.expiresAt,
+      paymentInfo: data.paymentInfo,
+      couponCode: data.couponCode,
     },
   });
 

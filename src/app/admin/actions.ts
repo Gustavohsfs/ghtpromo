@@ -1,9 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { requireSessionAdmin } from "@/server/admin-auth";
+import { requireOwnerAdmin, requireSessionAdmin } from "@/server/admin-auth";
 import {
   createSessionToken,
   SESSION_COOKIE,
@@ -93,7 +94,7 @@ export async function createAdminAction(
   _previous: AdminFormState,
   formData: FormData,
 ): Promise<AdminFormState> {
-  await requireSessionAdmin();
+  await requireOwnerAdmin();
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
@@ -111,4 +112,36 @@ export async function createAdminAction(
 
   await prisma.admin.create({ data: { email, passwordHash: await hashPassword(password) } });
   return { success: `Admin ${email} cadastrado.` };
+}
+
+/** Owner apaga um admin (nunca a si próprio). */
+export async function deleteAdminAction(adminId: string): Promise<void> {
+  const owner = await requireOwnerAdmin();
+  if (adminId === owner.id) return;
+  await getPrismaClient()
+    .admin.delete({ where: { id: adminId } })
+    .catch(() => undefined);
+  revalidatePath("/admin/admins");
+}
+
+/** Owner redefine a senha de qualquer admin. */
+export async function resetAdminPasswordAction(
+  _previous: AdminFormState,
+  formData: FormData,
+): Promise<AdminFormState> {
+  await requireOwnerAdmin();
+  const adminId = String(formData.get("adminId") ?? "");
+  const password = String(formData.get("password") ?? "");
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    return { error: `A senha precisa de ao menos ${MIN_PASSWORD_LENGTH} caracteres.` };
+  }
+  const prisma = getPrismaClient();
+  const admin = await prisma.admin.findUnique({ where: { id: adminId } });
+  if (!admin) return { error: "Admin não encontrado." };
+
+  await prisma.admin.update({
+    where: { id: adminId },
+    data: { passwordHash: await hashPassword(password) },
+  });
+  return { success: `Senha de ${admin.email} redefinida.` };
 }

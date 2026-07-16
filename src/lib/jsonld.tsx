@@ -1,3 +1,4 @@
+import { buildProductPath } from "@/features/deals/product-path";
 import type { Category, Deal } from "@/features/deals/types";
 
 import { buildAffiliateUrl } from "./affiliate";
@@ -45,6 +46,7 @@ export function productJsonLd(deal: Deal): JsonLdObject {
     name: deal.product.title,
     ...(deal.product.description !== null && { description: deal.product.description }),
     image: absoluteUrl(deal.product.imageUrl),
+    url: absoluteUrl(buildProductPath({ id: deal.id, title: deal.product.title })),
     offers: {
       "@type": "Offer",
       price: deal.price,

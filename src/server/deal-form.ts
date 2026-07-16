@@ -15,6 +15,9 @@ export interface ParsedDealForm {
   affiliateUrl: string;
   imageUrl: string;
   expiresAt: Date | null;
+  /** Forma de pagamento anunciada (ex.: "à vista no Pix"). */
+  paymentInfo: string | null;
+  couponCode: string | null;
 }
 
 export type DealFormResult = { ok: true; data: ParsedDealForm } | { ok: false; error: string };
@@ -98,6 +101,8 @@ export function parseDealForm(formData: FormData): DealFormResult {
       affiliateUrl,
       imageUrl,
       expiresAt,
+      paymentInfo: text("paymentInfo") || null,
+      couponCode: text("couponCode") || null,
     },
   };
 }
