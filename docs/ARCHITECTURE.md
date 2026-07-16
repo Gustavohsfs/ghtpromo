@@ -234,6 +234,15 @@ dias") já que a KaBuM não envia preço antigo.
 - **Favicon**: `src/app/icon.svg` + `favicon.ico`/`apple-icon.png` gerados
   do quadrado do `ghtpromo-logo-full-dark` (tag verde em fundo escuro).
 
+## Cupons (2026-07-16)
+
+- Model `Coupon` (loja, código, benefício, link, validade opcional). Aba
+  pública `/cupons` (estática; revalidada pelas mutações do admin e pelo
+  cron): cards com código copiável em um toque e link "usar na loja" com rel
+  de afiliado; vencidos somem via `getActiveCoupons()` (repositório, mock +
+  Prisma). CRUD em `/admin/cupons` (validação pura `coupon-form.ts`).
+  Entrada "Cupons" na sidebar, sitemap e llms.txt.
+
 ## Filtros e paginação (2026-07-15)
 
 - Estado na URL (`?lojas=a,b&preco=100-500&ordem=menor-preco&page=2`) —

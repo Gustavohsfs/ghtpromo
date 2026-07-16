@@ -8,6 +8,7 @@ import { logoutAction } from "../actions";
 const MENU = [
   { href: "/admin/ofertas", label: "Ofertas" },
   { href: "/admin/ofertas/nova", label: "Nova oferta" },
+  { href: "/admin/cupons", label: "Cupons" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/admins", label: "Admins", ownerOnly: true },
   { href: "/admin/senha", label: "Trocar senha" },

@@ -1,6 +1,7 @@
+import type { Coupon } from "@/features/coupons/types";
 import { DEALS_PAGE_SIZE } from "@/features/deals/listing";
 import type { Category, Deal, Store } from "@/features/deals/types";
-import { MOCK_CATEGORIES, MOCK_DEALS, MOCK_STORES } from "@/mocks";
+import { MOCK_CATEGORIES, MOCK_COUPONS, MOCK_DEALS, MOCK_STORES } from "@/mocks";
 
 import type { DealListing, DealListQuery, DealsRepository } from "./deals.repository";
 
@@ -31,6 +32,11 @@ export class MockDealsRepository implements DealsRepository {
 
   async getStores(): Promise<Store[]> {
     return Object.values(MOCK_STORES);
+  }
+
+  async getActiveCoupons(): Promise<Coupon[]> {
+    const now = new Date();
+    return MOCK_COUPONS.filter((coupon) => coupon.expiresAt === null || coupon.expiresAt > now);
   }
 
   async getDealById(id: string): Promise<Deal | null> {

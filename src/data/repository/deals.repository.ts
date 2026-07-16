@@ -1,3 +1,4 @@
+import type { Coupon } from "@/features/coupons/types";
 import type { DealSort } from "@/features/deals/listing";
 import type { Category, Deal, Store } from "@/features/deals/types";
 
@@ -41,4 +42,6 @@ export interface DealsRepository {
   getFeaturedDeals(): Promise<Deal[]>;
   /** Listagem paginada com filtros — páginas de categoria e busca. */
   listDeals(query: DealListQuery): Promise<DealListing>;
+  /** Cupons válidos (não vencidos) para a aba /cupons, mais recentes antes. */
+  getActiveCoupons(): Promise<Coupon[]>;
 }

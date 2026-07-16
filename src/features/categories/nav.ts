@@ -10,6 +10,7 @@ import {
   Smartphone,
   Sparkles,
   Tag,
+  TicketPercent,
   Tv,
   Zap,
   type LucideIcon,
@@ -29,6 +30,7 @@ export interface CategoryNavItem {
 export function buildCategoryNavItems(categories: Category[]): CategoryNavItem[] {
   return [
     { href: "/", label: "Início", slug: "inicio" },
+    { href: "/cupons", label: "Cupons", slug: "cupons" },
     ...categories.map((category) => ({
       href: `/categorias/${category.slug}`,
       label: category.name,
@@ -40,6 +42,7 @@ export function buildCategoryNavItems(categories: Category[]): CategoryNavItem[]
 /** Ícones por slug — categorias novas caem no DEFAULT_NAV_ICON. */
 export const NAV_ICONS: Record<string, LucideIcon> = {
   inicio: House,
+  cupons: TicketPercent,
   eletronicos: Zap,
   geladeiras: Refrigerator,
   tvs: Tv,

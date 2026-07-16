@@ -54,12 +54,33 @@ model Category {
 }
 
 model Store {
-  id      String @id
+  id      String   @id
   name    String
-  iconUrl String @map("icon_url")
+  iconUrl String   @map("icon_url")
   deals   Deal[]
+  coupons Coupon[]
 
   @@map("stores")
+}
+
+/// Cupom de desconto de uma loja parceira (aba /cupons; CRUD em /admin/cupons).
+model Coupon {
+  id           String    @id @default(cuid())
+  store        Store     @relation(fields: [storeId], references: [id])
+  storeId      String    @map("store_id")
+  /// Código que o usuário copia (ex.: "GHT10").
+  code         String
+  /// Descrição curta do benefício (ex.: "10% OFF em periféricos").
+  description  String
+  /// Link (afiliado quando houver) para usar o cupom na loja.
+  affiliateUrl String    @map("affiliate_url")
+  /// Nulo = sem validade. Vencidos somem da vitrine.
+  expiresAt    DateTime? @map("expires_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@index([storeId])
+  @@map("coupons")
 }
 
 model Product {
