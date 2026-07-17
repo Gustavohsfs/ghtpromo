@@ -37,4 +37,12 @@ describe("PromoteDealButton", () => {
     });
     expect(preview.textContent).toContain("Só hoje!");
   });
+
+  it("no desktop (jsdom) oferece copiar a mensagem e a instrução de colar", () => {
+    render(<PromoteDealButton deal={deal} />);
+    fireEvent.click(screen.getByRole("button", { name: /promover/i }));
+
+    expect(screen.getByRole("button", { name: /copiar mensagem/i })).toBeInTheDocument();
+    expect(screen.getByText(/cole no grupo do whatsapp/i)).toBeInTheDocument();
+  });
 });
