@@ -234,3 +234,8 @@ painel). Menu: Ofertas (CRUD manual com link afiliado, loja, validade, preview
 OG de imagem) · Admins (cadastro) · Trocar senha · Sair. Sem auth de usuários
 finais. Design completo em
 `docs/superpowers/specs/2026-07-15-admin-panel-design.md`.
+
+- Tela "Promover" (2026-07-17): grid de todas as ofertas ativas com busca e
+  paginação; botão que monta a mensagem-template da oferta (com mensagem
+  opcional), copia e abre o WhatsApp para envio ao grupo de clientes. Spec em
+  `docs/superpowers/specs/2026-07-17-promover-whatsapp-design.md`.

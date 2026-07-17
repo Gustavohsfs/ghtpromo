@@ -243,6 +243,26 @@ dias") já que a KaBuM não envia preço antigo.
   Prisma). CRUD em `/admin/cupons` (validação pura `coupon-form.ts`).
   Entrada "Cupons" na sidebar, sitemap e llms.txt.
 
+## Promover no WhatsApp (2026-07-17)
+
+- **`/admin/promover`**: grid de todas as ofertas ativas (manuais primeiro,
+  feed por último — mesmo `orderBy [source desc, createdAt desc]` da vitrine)
+  com busca server-side por título/descrição (`?q=`) e paginação numerada
+  (reusa `ListingPagination`). Ofertas do feed só têm "Promover" — o cron
+  diário sobrescreveria edições e ressuscitaria exclusões; as manuais têm
+  também Editar/Apagar (reuso da aba Ofertas).
+- **Modal Promover**: mensagem montada por `buildWhatsAppMessage()` (função
+  pura testada em `src/features/deals/whatsapp-message.ts` — template com
+  emojis, linhas condicionais, descrição truncada em 200 chars) + campo de
+  mensagem opcional com preview ao vivo. "Copiar e abrir WhatsApp" copia o
+  texto e abre `wa.me/?text=`; o usuário escolhe o grupo e envia. A imagem
+  vem do preview OG da página de produto.
+- **Envio semi-automático de propósito**: a Groups API oficial da Meta limita
+  grupos a 8 membros, exige OBA e não aceita números do app WhatsApp
+  Business; APIs não oficiais arriscam banimento do número (spec
+  `2026-07-17-promover-whatsapp-design.md`). A tela é independente do
+  mecanismo — dá para trocar por API no futuro sem refazer a grid.
+
 ## Filtros e paginação (2026-07-15)
 
 - Estado na URL (`?lojas=a,b&preco=100-500&ordem=menor-preco&page=2`) —
