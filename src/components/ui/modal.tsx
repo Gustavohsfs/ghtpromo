@@ -11,14 +11,17 @@ export interface ModalProps {
   /** Título acessível do diálogo (vira o aria-labelledby). */
   title: string;
   children: ReactNode;
+  /** Ações fixadas no rodapé (sempre visíveis; só o miolo rola). */
+  footer?: ReactNode;
   className?: string;
 }
 
 /**
  * Modal acessível sobre <dialog> nativo: foco preso, Esc fecha e o foco
  * retorna ao elemento de origem automaticamente. Clique no backdrop fecha.
+ * Altura limitada à viewport: cabeçalho e rodapé ficam fixos e o corpo rola.
  */
-export function Modal({ open, onClose, title, children, className }: ModalProps) {
+export function Modal({ open, onClose, title, children, footer, className }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = `${title.replace(/\s+/g, "-").toLowerCase()}-modal-title`;
 
@@ -41,12 +44,12 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
       onClose={onClose}
       onClick={handleBackdropClick}
       className={cn(
-        "border-border bg-surface text-foreground m-auto w-full max-w-md rounded-lg border",
+        "border-border bg-surface text-foreground m-auto flex max-h-[90dvh] w-full max-w-[calc(100vw-1.5rem)] flex-col rounded-lg border sm:max-w-md",
         "shadow-[0_0_48px_-12px_var(--color-brand-glow)] backdrop:bg-black/70",
         className,
       )}
     >
-      <div className="border-border flex items-center justify-between border-b px-5 py-4">
+      <div className="border-border flex shrink-0 items-center justify-between border-b px-5 py-4">
         <h2 id={titleId} className="text-base font-semibold">
           {title}
         </h2>
@@ -59,7 +62,12 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
           <X className="size-4" aria-hidden />
         </button>
       </div>
-      <div className="px-5 py-4">{children}</div>
+      <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
+      {footer && (
+        <div className="border-border bg-surface shrink-0 rounded-b-lg border-t px-5 py-4">
+          {footer}
+        </div>
+      )}
     </dialog>
   );
 }
