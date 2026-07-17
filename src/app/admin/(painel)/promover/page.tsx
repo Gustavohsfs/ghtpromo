@@ -4,11 +4,14 @@ import Link from "next/link";
 import { buttonClasses } from "@/components/ui/button";
 import type { ListingState } from "@/features/deals/listing";
 import { ListingPagination } from "@/features/deals/listing-pagination";
+import { buildProductPath } from "@/features/deals/product-path";
 import { formatBRL } from "@/lib/format";
+import { absoluteUrl } from "@/lib/site";
 import { requireSessionAdmin } from "@/server/admin-auth";
 import { getPrismaClient } from "@/server/prisma";
 
 import { DeleteDealButton } from "../ofertas/delete-deal-button";
+import { PromoteDealButton } from "./promote-deal-button";
 import { SearchForm } from "./search-form";
 
 const PAGE_SIZE = 20;
@@ -87,6 +90,16 @@ export default async function AdminPromoverPage({
             <tbody className="divide-border divide-y">
               {deals.map((deal) => {
                 const isManual = deal.source === "manual";
+                const whatsAppDeal = {
+                  title: deal.product.title,
+                  url: absoluteUrl(buildProductPath({ id: deal.id, title: deal.product.title })),
+                  price: Number(deal.price),
+                  oldPrice: deal.oldPrice ? Number(deal.oldPrice) : null,
+                  discountPct: deal.discountPct ?? null,
+                  paymentInfo: deal.paymentInfo ?? null,
+                  couponCode: deal.couponCode ?? null,
+                  description: deal.product.description ?? null,
+                };
                 return (
                   <tr key={deal.id}>
                     <td className="px-4 py-3">
@@ -124,6 +137,7 @@ export default async function AdminPromoverPage({
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
+                        <PromoteDealButton deal={whatsAppDeal} />
                         {isManual && (
                           <>
                             <Link
