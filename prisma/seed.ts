@@ -2,14 +2,25 @@ import "dotenv/config";
 
 import { MOCK_CATEGORIES, MOCK_DEALS, MOCK_STORES } from "../src/mocks";
 import { getPrismaClient } from "../src/server/prisma";
+import { seedBlockReason } from "../src/server/seed-guard";
 
 /**
  * Seed: popula o banco com os dados de demonstração de src/mocks/.
  * Idempotente (upserts) — rodar de novo apenas atualiza.
  * Uso: npm run db:seed
+ * Banco com ofertas reais (feed/manual) bloqueia o seed — `-- --force` libera.
  */
 async function main() {
   const prisma = getPrismaClient();
+
+  const [awin, manual] = await Promise.all([
+    prisma.deal.count({ where: { source: "awin" } }),
+    prisma.deal.count({ where: { source: "manual" } }),
+  ]);
+  const blockReason = seedBlockReason({ awin, manual }, process.argv.includes("--force"));
+  if (blockReason) {
+    throw new Error(blockReason);
+  }
 
   for (const category of MOCK_CATEGORIES) {
     await prisma.category.upsert({
