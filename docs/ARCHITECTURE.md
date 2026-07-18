@@ -263,6 +263,21 @@ dias") já que a KaBuM não envia preço antigo.
   `2026-07-17-promover-whatsapp-design.md`). A tela é independente do
   mecanismo — dá para trocar por API no futuro sem refazer a grid.
 
+## Links curtos de compartilhamento (2026-07-18)
+
+- **`/p/[code]`** (route handler): resolve a oferta pelo `shortCode` (nanoid 7,
+  coluna única em `Deal`, gerada na criação — admin, sync Awin e seed; backfill
+  por migration) e responde **302** para `/produto/slug--id`. 302 e não 301
+  para o navegador não cachear o redirect e toda visita passar pela contagem.
+- **Cliques**: `click_count` no `Deal`, incrementado no redirect via
+  `DealsRepository.registerShortLinkClick()`; bots (WhatsApp preview,
+  Googlebot etc., detectados por `isBotUserAgent()`) não contam. Coluna
+  "Cliques" na aba Ofertas do admin.
+- **Uso**: mensagem do Promover e ações do Compartilhar (WhatsApp + copiar)
+  usam `absoluteUrl("/p/" + shortCode)`. Canônica de SEO segue na URL longa;
+  `/p/` em `Disallow` no robots.txt. Código inválido/oferta expirada → 302
+  para a home. Spec `2026-07-18-links-curtos-design.md`.
+
 ## Filtros e paginação (2026-07-15)
 
 - Estado na URL (`?lojas=a,b&preco=100-500&ordem=menor-preco&page=2`) —

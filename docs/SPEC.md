@@ -239,3 +239,7 @@ finais. Design completo em
   paginação; botão que monta a mensagem-template da oferta (com mensagem
   opcional), copia e abre o WhatsApp para envio ao grupo de clientes. Spec em
   `docs/superpowers/specs/2026-07-17-promover-whatsapp-design.md`.
+- Links curtos (2026-07-18): rota `/p/{code}` (nanoid 7 por oferta) redireciona
+  302 para a página do produto contando cliques (bots não contam); Promover e
+  Compartilhar usam o link curto; coluna Cliques na aba Ofertas. Spec em
+  `docs/superpowers/specs/2026-07-18-links-curtos-design.md`.
