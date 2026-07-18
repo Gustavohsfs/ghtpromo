@@ -44,4 +44,8 @@ export interface DealsRepository {
   listDeals(query: DealListQuery): Promise<DealListing>;
   /** Cupons válidos (não vencidos) para a aba /cupons, mais recentes antes. */
   getActiveCoupons(): Promise<Coupon[]>;
+  /** Oferta pelo código do link curto; null se não existir ou vencida. */
+  getDealByShortCode(code: string): Promise<Deal | null>;
+  /** Registra um clique no link curto (chamado pela rota /p/[code]). */
+  registerShortLinkClick(code: string): Promise<void>;
 }

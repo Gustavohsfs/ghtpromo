@@ -186,4 +186,20 @@ export class PrismaDealsRepository implements DealsRepository {
       pageCount: Math.max(1, Math.ceil(total / DEALS_PAGE_SIZE)),
     };
   }
+
+  async getDealByShortCode(code: string): Promise<Deal | null> {
+    const row = await this.client.deal.findFirst({
+      where: { shortCode: code, AND: notExpired() },
+      include: DEAL_INCLUDE,
+    });
+    return row ? mapDeal(row) : null;
+  }
+
+  async registerShortLinkClick(code: string): Promise<void> {
+    // updateMany: código inexistente vira no-op em vez de exceção.
+    await this.client.deal.updateMany({
+      where: { shortCode: code },
+      data: { clickCount: { increment: 1 } },
+    });
+  }
 }

@@ -22,6 +22,9 @@ function byCuratedFirst(a: Deal, b: Deal): number {
 
 /** Implementação sobre os dados fictícios de src/mocks/ (DATA_SOURCE=mock). */
 export class MockDealsRepository implements DealsRepository {
+  /** Cliques da sessão — mock não persiste nada entre processos. */
+  private readonly clickCounts = new Map<string, number>();
+
   async getCategories(): Promise<Category[]> {
     return [...MOCK_CATEGORIES];
   }
@@ -75,5 +78,18 @@ export class MockDealsRepository implements DealsRepository {
       page,
       pageCount: Math.max(1, Math.ceil(deals.length / DEALS_PAGE_SIZE)),
     };
+  }
+
+  async getDealByShortCode(code: string): Promise<Deal | null> {
+    return MOCK_DEALS.find((deal) => deal.shortCode === code) ?? null;
+  }
+
+  async registerShortLinkClick(code: string): Promise<void> {
+    this.clickCounts.set(code, this.getClickCount(code) + 1);
+  }
+
+  /** Cliques registrados nesta sessão (inspeção em testes). */
+  getClickCount(code: string): number {
+    return this.clickCounts.get(code) ?? 0;
   }
 }

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { MOCK_DEALS } from "@/mocks";
+
 import { MockDealsRepository } from "./mock-deals.repository";
 
 const repository = new MockDealsRepository();
@@ -77,5 +79,23 @@ describe("MockDealsRepository", () => {
     const stores = await repository.getStores();
     expect(stores.length).toBeGreaterThanOrEqual(8);
     expect(stores.some((store) => store.id === "mercadolivre")).toBe(true);
+  });
+});
+
+describe("links curtos", () => {
+  it("resolve oferta pelo shortCode e null para código desconhecido", async () => {
+    const repository = new MockDealsRepository();
+    const [first] = MOCK_DEALS;
+    expect(await repository.getDealByShortCode(first.shortCode)).toEqual(first);
+    expect(await repository.getDealByShortCode("zzzzzzz")).toBeNull();
+  });
+
+  it("conta cliques por código", async () => {
+    const repository = new MockDealsRepository();
+    const [first] = MOCK_DEALS;
+    expect(repository.getClickCount(first.shortCode)).toBe(0);
+    await repository.registerShortLinkClick(first.shortCode);
+    await repository.registerShortLinkClick(first.shortCode);
+    expect(repository.getClickCount(first.shortCode)).toBe(2);
   });
 });
