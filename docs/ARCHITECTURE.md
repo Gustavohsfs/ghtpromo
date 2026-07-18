@@ -253,8 +253,9 @@ dias") já que a KaBuM não envia preço antigo.
   também Editar/Apagar (reuso da aba Ofertas).
 - **Modal Promover**: mensagem montada por `buildWhatsAppMessage()` (função
   pura testada em `src/features/deals/whatsapp-message.ts` — template com
-  emojis, linhas condicionais, descrição truncada em 200 chars) + campo de
-  mensagem opcional com preview ao vivo. "Copiar e abrir WhatsApp" copia o
+  emojis, linhas condicionais, descrição truncada em 200 chars, convite fixo
+  do grupo `GROUP_INVITE_URL` fechando toda mensagem) + campo de mensagem
+  opcional com preview ao vivo. "Copiar e abrir WhatsApp" copia o
   texto e abre `wa.me/?text=`; o usuário escolhe o grupo e envia. A imagem
   vem do preview OG da página de produto.
 - **Envio semi-automático de propósito**: a Groups API oficial da Meta limita

@@ -15,6 +15,12 @@ export interface WhatsAppDealInfo {
 
 const DESCRIPTION_MAX_LENGTH = 200;
 
+/**
+ * Convite do grupo GHT Promo no WhatsApp. O link vale até um admin do grupo
+ * redefini-lo ("Redefinir link" no app) — se isso acontecer, atualize aqui.
+ */
+export const GROUP_INVITE_URL = "https://chat.whatsapp.com/K3ycGhZGQmrEG9Qal52yNo";
+
 function truncate(text: string): string {
   if (text.length <= DESCRIPTION_MAX_LENGTH) return text;
   return `${text.slice(0, DESCRIPTION_MAX_LENGTH).trimEnd()}…`;
@@ -22,7 +28,8 @@ function truncate(text: string): string {
 
 /**
  * Mensagem de promoção para grupo do WhatsApp (formatação `*negrito*` e
- * `~riscado~`). Linhas sem dado são omitidas; a mensagem opcional entra no fim.
+ * `~riscado~`). Linhas sem dado são omitidas; a mensagem opcional entra antes
+ * do convite fixo do grupo, que fecha toda mensagem.
  */
 export function buildWhatsAppMessage(deal: WhatsAppDealInfo, customMessage = ""): string {
   const priceLines: string[] = [];
@@ -37,6 +44,7 @@ export function buildWhatsAppMessage(deal: WhatsAppDealInfo, customMessage = "")
   blocks.push(`👉 ${deal.url}`);
   const custom = customMessage.trim();
   if (custom) blocks.push(custom);
+  blocks.push(`👥 Convide a família e os amigos para o grupo: ${GROUP_INVITE_URL}`);
 
   return blocks.join("\n\n");
 }

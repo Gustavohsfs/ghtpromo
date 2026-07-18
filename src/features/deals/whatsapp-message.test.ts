@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { buildWhatsAppMessage, type WhatsAppDealInfo } from "./whatsapp-message";
+import { buildWhatsAppMessage, GROUP_INVITE_URL, type WhatsAppDealInfo } from "./whatsapp-message";
+
+const INVITE_LINE = `👥 Convide a família e os amigos para o grupo: ${GROUP_INVITE_URL}`;
 
 const NBSP = " ";
 
@@ -35,6 +37,8 @@ describe("buildWhatsAppMessage", () => {
         "👉 https://ghtpromo.com.br/produto/furadeira-bosch--abc123",
         "",
         "Corre que acaba rápido!",
+        "",
+        INVITE_LINE,
       ].join("\n"),
     );
   });
@@ -56,6 +60,8 @@ describe("buildWhatsAppMessage", () => {
         `💰 *Por R$${NBSP}299,90*`,
         "",
         "👉 https://ghtpromo.com.br/produto/furadeira-bosch--abc123",
+        "",
+        INVITE_LINE,
       ].join("\n"),
     );
   });
@@ -69,8 +75,13 @@ describe("buildWhatsAppMessage", () => {
 
   it("ignora mensagem opcional só de espaços", () => {
     const message = buildWhatsAppMessage(makeDeal(), "   ");
-    expect(message.endsWith("👉 https://ghtpromo.com.br/produto/furadeira-bosch--abc123")).toBe(
-      true,
+    expect(message).toContain(
+      "👉 https://ghtpromo.com.br/produto/furadeira-bosch--abc123\n\n👥 Convide",
     );
+  });
+
+  it("convite do grupo é sempre a última linha da mensagem", () => {
+    expect(buildWhatsAppMessage(makeDeal(), "Corre!").endsWith(INVITE_LINE)).toBe(true);
+    expect(buildWhatsAppMessage(makeDeal()).endsWith(INVITE_LINE)).toBe(true);
   });
 });
