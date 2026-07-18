@@ -112,6 +112,13 @@
 
 ---
 
+## Entregas pós-fases
+
+- Links curtos `/p/{code}` com contagem de cliques (2026-07-18) — spec
+  `docs/superpowers/specs/2026-07-18-links-curtos-design.md`.
+
+---
+
 ## Riscos e mitigação
 
 | Risco                                                    | Mitigação                                                      |
