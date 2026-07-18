@@ -47,6 +47,7 @@ export default async function AdminOfertasPage() {
                 <th className="px-4 py-3 font-medium">Produto</th>
                 <th className="px-4 py-3 font-medium">Loja</th>
                 <th className="px-4 py-3 font-medium">Preço</th>
+                <th className="px-4 py-3 font-medium">Cliques</th>
                 <th className="px-4 py-3 font-medium">Validade</th>
                 <th className="px-4 py-3 font-medium">Ações</th>
               </tr>
@@ -59,6 +60,7 @@ export default async function AdminOfertasPage() {
                   </td>
                   <td className="px-4 py-3">{deal.store.name}</td>
                   <td className="px-4 py-3">{formatBRL(Number(deal.price))}</td>
+                  <td className="text-muted-foreground px-4 py-3">{deal.clickCount}</td>
                   <td className="text-muted-foreground px-4 py-3">
                     {deal.expiresAt ? deal.expiresAt.toLocaleDateString("pt-BR") : "sem validade"}
                   </td>

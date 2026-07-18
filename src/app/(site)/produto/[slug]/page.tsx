@@ -51,7 +51,7 @@ export default async function ProductPage(props: PageProps<"/produto/[slug]">) {
   if (!deal) notFound();
   const { product, store } = deal;
 
-  const shareUrl = absoluteUrl(buildProductPath({ id: deal.id, title: product.title }));
+  const shareUrl = absoluteUrl(`/p/${deal.shortCode}`);
   const postedAt = deal.createdAt.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",

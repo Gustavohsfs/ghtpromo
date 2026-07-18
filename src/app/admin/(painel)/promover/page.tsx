@@ -4,7 +4,6 @@ import Link from "next/link";
 import { buttonClasses } from "@/components/ui/button";
 import type { ListingState } from "@/features/deals/listing";
 import { ListingPagination } from "@/features/deals/listing-pagination";
-import { buildProductPath } from "@/features/deals/product-path";
 import { formatBRL } from "@/lib/format";
 import { absoluteUrl } from "@/lib/site";
 import { requireSessionAdmin } from "@/server/admin-auth";
@@ -92,7 +91,7 @@ export default async function AdminPromoverPage({
                 const isManual = deal.source === "manual";
                 const whatsAppDeal = {
                   title: deal.product.title,
-                  url: absoluteUrl(buildProductPath({ id: deal.id, title: deal.product.title })),
+                  url: absoluteUrl(`/p/${deal.shortCode}`),
                   price: Number(deal.price),
                   oldPrice: deal.oldPrice ? Number(deal.oldPrice) : null,
                   discountPct: deal.discountPct ?? null,
