@@ -23,7 +23,7 @@ export default function robots(): MetadataRoute.Robots {
   }));
 
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: "/busca" }, ...aiRules],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/busca", "/p/"] }, ...aiRules],
     sitemap: absoluteUrl("/sitemap.xml"),
   };
 }
