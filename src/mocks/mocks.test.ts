@@ -40,4 +40,10 @@ describe("integridade dos mocks", () => {
     const ids = MOCK_DEALS.map((deal) => deal.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("todo deal mock tem shortCode único de 7 caracteres", () => {
+    const codes = MOCK_DEALS.map((deal) => deal.shortCode);
+    expect(new Set(codes).size).toBe(MOCK_DEALS.length);
+    for (const code of codes) expect(code).toMatch(/^[0-9A-Za-z]{7}$/);
+  });
 });

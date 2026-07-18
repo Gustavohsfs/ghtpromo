@@ -74,5 +74,7 @@ export interface Deal {
   paymentInfo: string | null;
   /** Código de cupom da oferta; null omite o bloco no detalhe. */
   couponCode: string | null;
+  /** Código do link curto /p/{code} (7 chars alfanuméricos, único). */
+  shortCode: string;
   isMock: boolean;
 }

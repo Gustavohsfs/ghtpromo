@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { diversifyDeals } from "./diversity";
+import { deriveShortCode } from "./short-code";
 import type { Deal, DealSource } from "./types";
 
 let counter = 0;
@@ -26,6 +27,7 @@ function deal(storeId: string, source: DealSource): Deal {
     createdAt: new Date("2026-07-01T12:00:00-03:00"),
     paymentInfo: null,
     couponCode: null,
+    shortCode: deriveShortCode(`deal-${counter}`),
     isMock: true,
   };
 }

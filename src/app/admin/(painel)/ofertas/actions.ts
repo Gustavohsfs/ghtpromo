@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { AdminFormState } from "@/app/admin/actions";
+import { generateShortCode } from "@/features/deals/short-code";
 import { requireSessionAdmin } from "@/server/admin-auth";
 import { parseDealForm } from "@/server/deal-form";
 import { getPrismaClient } from "@/server/prisma";
@@ -38,6 +39,7 @@ export async function createDealAction(
   });
   await prisma.deal.create({
     data: {
+      shortCode: generateShortCode(),
       productId: product.id,
       storeId: data.storeId,
       price: data.price,

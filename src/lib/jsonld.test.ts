@@ -31,6 +31,7 @@ const deal: Deal = {
   createdAt: new Date("2026-07-01T12:00:00-03:00"),
   paymentInfo: null,
   couponCode: null,
+  shortCode: "aB3dE7f",
   isMock: true,
 };
 

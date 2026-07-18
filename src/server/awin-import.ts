@@ -1,5 +1,6 @@
 import { parse } from "csv-parse/sync";
 
+import { generateShortCode } from "@/features/deals/short-code";
 import { htmlToPlainText } from "@/lib/html-text";
 import { getPrismaClient } from "@/server/prisma";
 
@@ -169,6 +170,7 @@ export async function importAwinFeed(
       where: { id: offer.dealId },
       create: {
         id: offer.dealId,
+        shortCode: generateShortCode(),
         productId: offer.productId,
         storeId: STORE_ID,
         price: offer.price,

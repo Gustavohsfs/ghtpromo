@@ -5,6 +5,7 @@
  * DealsRepository. Ver skill ght-mock-data.
  * ==========================================================================*/
 
+import { deriveShortCode } from "@/features/deals/short-code";
 import type { Category, Deal, Store } from "@/features/deals/types";
 
 import { MOCK_STORES } from "./stores";
@@ -41,6 +42,7 @@ function mockDeal({ id, title, categorySlug, store, price, oldPrice, featured }:
     createdAt: new Date("2026-07-01T12:00:00-03:00"),
     paymentInfo: null,
     couponCode: null,
+    shortCode: deriveShortCode(id),
     isMock: true,
   };
 }

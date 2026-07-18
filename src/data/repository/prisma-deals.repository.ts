@@ -63,6 +63,7 @@ function mapDeal(row: DealWithRelations): Deal {
     createdAt: row.createdAt,
     paymentInfo: row.paymentInfo,
     couponCode: row.couponCode,
+    shortCode: row.shortCode,
     isMock: false,
   };
 }

@@ -59,7 +59,7 @@ async function main() {
     };
     await prisma.deal.upsert({
       where: { id: deal.id },
-      create: { id: deal.id, ...dealData },
+      create: { id: deal.id, shortCode: deal.shortCode, ...dealData },
       update: dealData,
     });
   }
