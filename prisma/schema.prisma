@@ -100,22 +100,22 @@ model Product {
 }
 
 model Deal {
-  id           String   @id @default(cuid())
-  product      Product  @relation(fields: [productId], references: [id])
-  productId    String   @map("product_id")
-  store        Store    @relation(fields: [storeId], references: [id])
-  storeId      String   @map("store_id")
+  id           String    @id @default(cuid())
+  product      Product   @relation(fields: [productId], references: [id])
+  productId    String    @map("product_id")
+  store        Store     @relation(fields: [storeId], references: [id])
+  storeId      String    @map("store_id")
   /// Preço atual em BRL.
-  price        Decimal  @db.Decimal(10, 2)
+  price        Decimal   @db.Decimal(10, 2)
   /// Preço anterior ("de"), exibido riscado. Nulo quando a fonte não informa.
-  oldPrice     Decimal? @map("old_price") @db.Decimal(10, 2)
+  oldPrice     Decimal?  @map("old_price") @db.Decimal(10, 2)
   /// Desconto percentual inteiro (derivado de price/oldPrice na escrita).
-  discountPct  Int?     @map("discount_pct")
-  affiliateUrl String   @map("affiliate_url")
-  featured     Boolean  @default(false)
+  discountPct  Int?      @map("discount_pct")
+  affiliateUrl String    @map("affiliate_url")
+  featured     Boolean   @default(false)
   /// Origem da oferta: "awin" (feed, expirada pelo cron), "manual" (painel
   /// admin — o cron nunca toca) ou "demo" (seed de demonstração).
-  source       String   @default("awin")
+  source       String    @default("awin")
   /// Validade de oferta manual; nula = sem validade. Consultas públicas
   /// excluem ofertas vencidas.
   expiresAt    DateTime? @map("expires_at")
@@ -123,9 +123,14 @@ model Deal {
   paymentInfo  String?   @map("payment_info")
   /// Código de cupom da oferta, quando houver; só ofertas manuais.
   couponCode   String?   @map("coupon_code")
+  /// Código do link curto /p/{code} (nanoid 7, alfanumérico); estável pela
+  /// vida da oferta — gerado na criação, nunca alterado.
+  shortCode    String    @unique @map("short_code")
+  /// Cliques no link curto (acessos de bots não contam).
+  clickCount   Int       @default(0) @map("click_count")
   reports      Report[]
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@index([productId])
   @@index([storeId])
