@@ -109,13 +109,10 @@
 6. **Sitemap de produtos** — as páginas `/produto/[slug]` (2026-07-16) são
    descobertas pelos links dos cards; incluí-las no sitemap (~4k URLs) quando
    valer o custo de geração.
-
----
-
-## Entregas pós-fases
-
-- Links curtos `/p/{code}` com contagem de cliques (2026-07-18) — spec
-  `docs/superpowers/specs/2026-07-18-links-curtos-design.md`.
+7. ~~**Links curtos de compartilhamento**~~ — ✅ feito em 2026-07-18: rota
+   `/p/{code}` com contagem de cliques, usada pelo Promover e pelo
+   Compartilhar (spec em
+   `docs/superpowers/specs/2026-07-18-links-curtos-design.md`).
 
 ---
 
